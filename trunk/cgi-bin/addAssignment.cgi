@@ -22,27 +22,29 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
 use auth;
 use User;
 use IO::File;
 use Assignment;
+use AnnotateitConfig;
 use Group;
 use Date::Calc qw(Today Delta_Days );
 use CGI;
 our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
-my $docURL = $config->param("server.documenturl");
+my $scriptdir = $config->{server}{scriptdirectory};
+my $serverURL = $config->{server}{url};
+my $docDir = $config->{server}{documentdirectory};
+my $docURL = $config->{server}{documenturl};
 my $action = $C->param("action") || "";
-my $docDir = $config->param("server.documentdirectory");
+
 our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 my $GroupID = $C->param("GroupID") || "";

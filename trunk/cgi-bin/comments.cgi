@@ -21,21 +21,22 @@
 use strict;
 use MIME::Lite;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
 use auth;
+use AnnotateitConfig;
 use Comment;
 use User;
 use CGI;
 $ENV{PATH} = "/usr/lib:/usr/bin:/bin:/usr/local/bin";
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
-our $scriptdir = $config->param("server.scriptdirectory");
-our $serverURL = $config->param("server.url");
+our $scriptdir = $config->{server}{scriptdirectory};
+our $serverURL = $config->{server}{url};
 our $parentID = $C->param("ParentID") || "";
 our $commentID = &widgets::scrub($C->param("CommentID") || "");
 our $commentText = &widgets::scrub('keeplinks',$C->param("CommentText") || "");

@@ -21,16 +21,17 @@
 
 use strict;
 use Template;
-use Config::Simple qw(-strict);
+# use Config::Simple qw(-strict);
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use CGI;
 use auth;
 use Group;
 our $C = CGI->new;
-our $config = Config::Simple->new("../etc/annie.conf");
-our $scriptdir = $config->param("server.scriptdirectory");
-our $serverURL = $config->param("server.url");
+our $config = $AnnotateitConfig::C;
+our $scriptdir = $config->{server}{scriptdirectory};
+our $serverURL = $config->{server}{url};
 our $parentID = $C->param("ParentID") || 0;
 our $submit = $C->param("submit") || "";
 our $fromLocation = $C->param("FromLocation") || "";

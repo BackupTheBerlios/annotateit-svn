@@ -22,20 +22,21 @@
 use strict;
 use MIME::Lite;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib "../site_perl";
+use AnnotateitConfig;
 use widgets;
 use User;
 use CGI;
 $ENV{PATH} = "/bin:/usr/bin:/usr/local/bin:/usr/lib";
 our $C = CGI->new;
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
-our $serverURL = $config->param("Server.URL");
+our $serverURL = $config->{server}{url};
 our $dbh = &widgets::dbConnect($config);
 our $action = $C->param("action") || "";
-our $scriptdir = $config->param("server.scriptdirectory");
+our $scriptdir = $config->{server}{scriptdirectory};
 if ($action eq "Send My Password") {
   &sendEmail;
 } else {
@@ -54,7 +55,7 @@ sub sendEmail {
   &printForm(error => "I don't have a record of $address.") unless $user->getID;
   my $pw = $user->getPassword;
   my $vars = { password => $pw,
-	       FromAddress => $config->param("email.from"),
+	       FromAddress => $config->{email}{from},
 	       ServerURL => $serverURL };
   my $message = "";
   $template->process("PasswordEmail.txt",$vars,\$message);

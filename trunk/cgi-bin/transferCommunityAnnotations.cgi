@@ -25,8 +25,9 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use User;
@@ -35,10 +36,10 @@ use PredefinedAnnotation;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo,$scriptdir,$cgiDir);
-$scriptdir = $config->param("server.scriptdirectory");
-$cgiDir = $config->param("server.url") . $scriptdir;
+$scriptdir = $config->{server}{scriptdirectory};
+$cgiDir = $config->{server}{url} . $scriptdir;
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 our $action = $C->param("action") || "";
@@ -69,7 +70,7 @@ for my $id (@ids) {
 }
 
 my $vars = { scriptdir => $scriptdir,
-	     serverurl => $config->param("server.url") };
+	     serverurl => $config->{server}{url} };
 print $C->header(-cookie=>$authInfo->{cookie});
 $template->process("TransferCommunityAnnotations.html",$vars) or die $template->error;
 exit;

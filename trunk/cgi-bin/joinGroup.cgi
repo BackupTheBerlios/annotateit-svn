@@ -21,18 +21,19 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict);
+# use Config::Simple qw( -strict);
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use Group;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo, $scriptdir, $serverURL);
-$scriptdir = $config->param("server.scriptdirectory");
-$serverURL = $config->param("server.url");
+$scriptdir = $config->{server}{scriptdirectory};
+$serverURL = $config->{server}{url};
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 my $groupID = $C->param("GroupID") || "";
@@ -59,8 +60,8 @@ sub joinGroup {
 
   unless ($groupID) {
     my $vars = {Error => "NoGroupIDPassed",
-		scriptdir => $config->param("server.scriptdirectory"),
-		serverurl => $config->param("server.url"),
+		scriptdir => $config->{server}{scriptdirectory},
+		serverurl => $config->{server}{url},
 		EnglishError => "You have to specify a group to join.",
 		BackPage => "manageGroups.cgi" };
     print $C->header(-cookie=>$authInfo->{cookie});
@@ -72,8 +73,8 @@ sub joinGroup {
   unless ($group->getGroupName) {
     print $C->header(-cookie=>$authInfo->{cookie});
     my $vars = {Error => "NoSuchGroupToJoin",
-		scriptdir => $config->param("server.scriptdirectory"),
-		serverurl => $config->param("server.url"),
+		scriptdir => $config->{server}{scriptdirectory},
+		serverurl => $config->{server}{url},
 		GroupID => $groupID,
 		EnglishError => "Can't find specified group",
 		BackPage => "manageGroups.cgi"};
@@ -84,8 +85,8 @@ sub joinGroup {
 			ID => $authInfo->{UserID});
   if ($user->hasGroup($group->getGroupID)) {
     my $vars = { Error => "AlreadyMember",
-		 scriptdir => $config->param("server.scriptdirectory"),
-		 serverurl => $config->param("server.url"),
+		 scriptdir => $config->{server}{scriptdirectory},
+		 serverurl => $config->{server}{url},
 		 GroupID => $groupID,
 		 EnglishError => "You are already a member!",
 		 BackPage => "manageGroups.cgi"};
@@ -97,8 +98,8 @@ sub joinGroup {
   if ($user->hasPrivilege($priv)) {
     unless ($group->addGroupMember($user)) {
       my $vars = { Error => "GroupIsClosed",
-		   scriptdir => $config->param("server.scriptdirectory"),
-		   serverurl => $config->param("server.url"),
+		   scriptdir => $config->{server}{scriptdirectory},
+		   serverurl => $config->{server}{url},
 		   GroupID => $groupID,
 		   EnglishError => "That group is closed to joining",
 		   BackPage => "manageGroups.cgi"};
@@ -109,8 +110,8 @@ sub joinGroup {
   } else {
     print $C->header(-cookie=> $authInfo->{cookie});
     my $vars = { Error => "NoPrivilegeToJoinGroup",
-		 scriptdir => $config->param("server.scriptdirectory"),
-		 serverurl => $config->param("server.url"),
+		 scriptdir => $config->{server}{scriptdirectory},
+		 serverurl => $config->{server}{url},
 		 GroupID => $groupID,
 		 EnglishError => "Unauthorized",
 		 BackPage => "manageGroups.cgi"};

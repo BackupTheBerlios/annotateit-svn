@@ -24,17 +24,18 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use CGI;
 use auth;
 use PredefinedAnnotation;
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo,$scriptdir,$cgiDir, $C);
 $C = CGI->new;
-$scriptdir = $config->param("server.scriptdirectory");
-$cgiDir = $config->param("server.url") . $scriptdir;
+$scriptdir = $config->{server}{scriptdirectory};
+$cgiDir = $config->{server}{url} . $scriptdir;
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 our $action = $C->param("action") || "";

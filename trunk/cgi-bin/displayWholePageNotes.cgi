@@ -21,8 +21,9 @@
 
 use strict;
 use Template;
-use Config::Simple qw(-strict);
+# use Config::Simple qw(-strict);
 use lib ("../site_perl");
+use AnnotateitConfig;
 use auth;
 use widgets;
 use User;
@@ -30,7 +31,7 @@ use Annotation;
 use CGI;
 our $C = CGI->new;
 
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $currentURL = $C->param("url") || "";
 $currentURL =~ s/[<>]//g;
@@ -40,7 +41,7 @@ our $user = User->load(dbh => $dbh,
 
 our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
-our $scriptdir = $config->param("server.scriptdirectory");
+our $scriptdir = $config->{server}{scriptdirectory};
 if (!($authInfo->{LoggedIn})) {
   my $vars = { scriptdir => $scriptdir,
 	       randomValue => &auth::randomValue(),

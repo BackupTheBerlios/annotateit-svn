@@ -23,15 +23,16 @@
 use strict;
 use MIME::Lite;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use auth;
 use widgets;
 use User;
 use Annotation;
 use CGI;
 our $C = CGI->new;
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $annotationID = $C->param("AnnotationID");
 our $authInfo = &auth::authenticated($dbh,\$C);
@@ -42,8 +43,8 @@ our $annotation = Annotation->load(dbh => $dbh,
 my $anonymous = $C->param("Anonymous") || "";
 my $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates" );
-my $scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
+my $scriptdir = $config->{server}{scriptdirectory};
+my $serverURL = $config->{server}{url};
 if (!($authInfo->{LoggedIn})) {
   my $vars = { hiddenVar => [{name => "AnnotationID", value => $annotationID}],
 	       scriptdir => $scriptdir,
@@ -116,8 +117,8 @@ sub sendNotice {
   my $to = shift @adminEmails;
   my $cc = join ", ", @adminEmails if (@adminEmails);
   my $message = "";
-  $to ||= $config->param("email.from");
-  my $from = $user->getEmail || $config->param("email.from");
+  $to ||= $config->{email}{from};
+  my $from = $user->getEmail || $config->{email}{from};
   $template->process("AnnotationNotification.txt",$an->getDisplayData({CurrentUser => $user}),\$message) or die $template->error;
   my $msg = MIME::Lite->new( To => $to,
 			     Cc => $cc,

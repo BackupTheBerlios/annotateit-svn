@@ -177,10 +177,10 @@ sub getDisplayData {
   if (defined $userID) {
     $outboxStatus = $self->outboxStatus($userID);
   }
-  croak "Please pass a config object to Document.pm for doc->getDisplayData" unless (defined $args{Config} and ref( $args{Config}) eq 'Config::Simple');
-  my $serverURL = $args{Config}->param("server.url");
-  my $docURL = $args{Config}->param("server.documenturl");
-  my $docDir = $args{Config}->param("server.documentdirectory");
+  croak "Please pass a config object to Document.pm for doc->getDisplayData" unless (defined $args{Config});
+  my $serverURL = $args{Config}->{server}{url};
+  my $docURL = $args{Config}->{server}{documenturl};
+  my $docDir = $args{Config}->{server}{documentdirectory};
   my $htmlDoc = $self->Filename . ".html";
   my $textDoc = $self->Filename . ".txt";
   my $type = $self->Type;

@@ -20,17 +20,19 @@
 #   http://www.gnu.org/licenses/gpl.txt
 use CGI;
 use Template;
+# use Config::Simple;
 use MIME::Lite;
 use strict;
 use Data::Dumper;
-use Config::Simple;
-my $config=Config::Simple->new("../etc/annie.conf");
+use lib (../site_perl);
+use AnnotateitConfig;
+my $config = $AnnotateitConfig::C;
 my $C = CGI->new();
 
 my $t = Template->new( RELATIVE => 1,
 		    INCLUDE_PATH => "../templates");
 my $time = scalar localtime;
-my $errorLogPath = $config->param("general.error_logs");
+my $errorLogPath = $config->{general}{error_logs};
 my $errorLogTail = `tail -n 5 $errorLogPath`;
 my $vars = { Error => "ScriptError",
 	     EnglishError => "Programming Defect Found",

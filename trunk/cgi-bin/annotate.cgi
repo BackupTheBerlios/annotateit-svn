@@ -21,7 +21,7 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
 use auth;
@@ -32,15 +32,16 @@ use MIME::Lite;
 use URI;
 use CGI;
 use LWP::UserAgent;
+use AnnotateitConfig;
 our $C = CGI->new;
 $ENV{PATH} = "/usr/bin:/bin:/usr/local/bin";
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
-our $scriptdir = $config->param("server.scriptdirectory");
-our $serverURL = $config->param("server.url");
+our $scriptdir = $config->{server}{scriptdirectory};
+our $serverURL = $config->{server}{url};
 our $annotation = &widgets::scrub("keeplinks",$C->param("annotation") || "");
-
+our $notification = $config->{general}{notification};
 our $url = $C->param("url") || "";
 $url =~ s/[<>]/ /g;
 
@@ -157,7 +158,7 @@ sub saveAnnotation {
   $an->save();
   my $user = User->load( dbh => $dbh,
 			 ID => $authInfo->{UserID});
-  &sendNotice($an) if ($config->param("general.notification") eq "Yes");
+  &sendNotice($an) if ($notification eq "Yes");
   my $vars = { url => $url,
 	       title => $title,
 	       annotation => $annotation,
@@ -177,7 +178,7 @@ sub sendNotice {
   my $to = shift @adminEmails;
   my $cc = join ", ", @adminEmails if (@adminEmails);
   my $message = "";
-  $to ||= $config->param("email.from");
+  $to ||= $config->{email}{from};
   my $vars = { Annotation => $an->getDisplayData({CurrentUser => $user}),
 	       serverurl => $serverURL,
 	       scriptdir => $scriptdir };

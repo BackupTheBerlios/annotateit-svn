@@ -21,20 +21,21 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use User;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo, $scriptdir, $user);
 my $template= Template->new( RELATIVE => 1,
 			     INCLUDE_PATH => "../templates");
 
-$scriptdir = $config->param("server.scriptdirectory");
+$scriptdir = $config->{server}{scriptdirectory};
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 unless ($authInfo->{LoggedIn}) {

@@ -30,13 +30,13 @@ sub dbConnect {
     my ($a, $b, $c) = caller();
     die "Config is not defined: $a: $b: $c\n";
   }
-  my $user = $config->param("database.user") || die "[database] user=\"\" is not defined in configuration file";
-  my $password = $config->param("database.password") || die "[database] password=\"\" is not defined in configuration file";
-  my $database = $config->param("database.name") || die "[database] name=\"\" is not defined in configuration file";
-  my $host = $config->param("database.host");
+  my $user = $config->{database}{user} || die "{database}{user} is not defined in configuration file";
+  my $password = $config->{database}{password} || die "{database}{password} is not defined in configuration file";
+  my $database = $config->{database}{name} || die "{database}{name} is not defined in configuration file";
+  my $host = $config->{database}{host};
   unless (defined $host and $host) {
-    $host = "localhost";
-    warn "[database] host=\"\" is not defined in configuration file.  Defaulting to \"localhost\"";
+      $host = "localhost";
+      warn "{database}{host} is not defined in configuration file.  Defaulting to \"localhost\"";
   }
 
   my $dsn = "DBI:mysql:database=$database;host=$host";

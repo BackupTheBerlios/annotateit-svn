@@ -20,26 +20,28 @@
 #   http://www.gnu.org/licenses/gpl.txt
 
 use strict;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
 use CGI;
 use auth;
 use User;
 use Assignment;
+use AnnotateitConfig;
 use Date::Calc qw(Today Delta_Days );
 use Template;
 our $C = CGI->new();
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 my $dbh = &widgets::dbConnect($config);
 my $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
-my $docURL = $config->param("server.documenturl");
+my $scriptdir = $config->{server}{scriptdirectory};
+my $serverURL = $config->{server}{url};
+my $docURL = $config->{server}{documenturl};
+my $docDir = $config->{server}{documentdirectory};
 my $action = $C->param("action") || "";
-my $docDir = $config->param("server.documentdirectory");
+
 my $ID = $C->param("ID");
 my $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");

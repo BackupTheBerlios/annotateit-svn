@@ -21,8 +21,9 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use User;
@@ -35,14 +36,15 @@ use CGI;
 our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
 our @chars = ('A'..'Z','a'..'z',0..9);
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
-our $scriptdir = $config->param("server.scriptdirectory");
-our $serverURL = $config->param("server.url");
-our $docURL = $config->param("server.documenturl");
+our $scriptdir = $config->{server}{scriptdirectory};
+our $serverURL = $config->{server}{url};
+our $docURL = $config->{server}{documenturl};
+our $docDir = $config->{server}{documentdirectory};
 our $action = $C->param("action") || "";
-our $docDir = $config->param("server.documentdirectory");
+
 our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 our $docID = $C->param("DocumentID") || 0; # coming from manageDocuments.cgi

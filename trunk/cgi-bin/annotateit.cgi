@@ -33,10 +33,11 @@ use auth;
 use widgets;
 use Annotation;
 use AnnotatedURL;
-use Config::Simple;
+# use Config::Simple;
+use AnnotateitConfig;
 use Template;
 use File::Basename;
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 $CGI::POST_MAX = 1024*100;
 our $C = CGI->new;
 
@@ -48,8 +49,8 @@ our $output = ""; # the html output from this script
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
 
-our $images_dir = $config->param("server.imagesdirectory");
-our $scriptdir = $config->param("server.scriptdirectory");
+our $images_dir = $config->{server}{imagesdirectory};
+our $scriptdir = $config->{server}{scriptdirectory};
 our $vars = { scriptdir => $scriptdir,
 	     LoggedIn => $authInfo->{LoggedIn},
 	     imagesdir => $images_dir};

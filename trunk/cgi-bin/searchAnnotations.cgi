@@ -21,8 +21,9 @@
 
 use strict;
 use Template;
-use Config::Simple qw(-strict);
+# use Config::Simple qw(-strict);
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use Group;
@@ -31,9 +32,9 @@ use AnnotationsSearch;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
-my $scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
+my $config = $AnnotateitConfig::C;
+my $scriptdir = $config->{server}{scriptdirectory};
+my $serverURL = $config->{server}{url};
 my $action = $C->param("action") || "";
 our ($dbh, $authInfo);
 

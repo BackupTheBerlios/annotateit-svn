@@ -21,18 +21,19 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
 use auth;
 use User;
+use AnnotateitConfig;
 use Date::Calc qw(Today_and_Now);
 use CGI;
 our $C = CGI->new;
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our ($template,$dbh, $authInfo, $scriptdir) = ();
-$scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
+$scriptdir = $config->{server}{scriptdirectory};
+my $serverURL = $config->{server}{url};
 my $var;
 $var->{scriptdir} = $scriptdir;
 my $action = $C->param("action") || "";

@@ -24,18 +24,19 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use User;
 use CGI;
 use CommunityAnnotation;
 our $C = CGI->new;
-my $config = Config::Simple->new("../etc/annie.conf");
+my $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo,$scriptdir,$cgiDir);
-$scriptdir = $config->param("server.scriptdirectory");
-$cgiDir = $config->param("server.url") . $scriptdir;
+$scriptdir = $config->{server}{scriptdirectory};
+$cgiDir = $config->{server}{url} . $scriptdir;
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 our $action = $C->param("action") || "";
@@ -62,7 +63,7 @@ unless ($user->hasPrivilege("Other.EditCommunityAnnotation")) {
   my $vars = { Error => "NoPrivilegeToEditCommunityAnnotation",
 	       EnglishError => "Unauthorized",
 	       scriptdir => $scriptdir,
-	       serverurl => $config->param("server.url"),
+	       serverurl => $config->{server}{url},
 	       BackPage => "manageCommunityAnnotations.cgi" };
   print $C->header(-cookie=>$authInfo->{cookie});
   $template->process("Error.html",$vars) or die $template->error;

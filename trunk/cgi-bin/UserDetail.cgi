@@ -20,8 +20,9 @@
 
 use strict;
 use Template;
-use Config::Simple qw( -strict );
+# use Config::Simple qw( -strict );
 use lib ("../site_perl");
+use AnnotateitConfig;
 use widgets;
 use auth;
 use Group;
@@ -29,11 +30,11 @@ use User;
 use Data::Dumper;
 use CGI;
 our $C = CGI->new;
-our $config = Config::Simple->new("../etc/annie.conf");
+our $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo, $scriptdir, $serverurl);
-$scriptdir = $config->param("server.scriptdirectory");
-our $docDir = $config->param("server.documentdirectory");
-$serverurl = $config->param("server.url");
+$scriptdir = $config->{server}{scriptdirectory};
+our $docDir = $config->{server}{documentdirectory};
+$serverurl = $config->{server}{url};
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 our $action = $C->param("action") || "";
