@@ -25,6 +25,7 @@ use Template;
 use lib ("../site_perl");
 use AnnotateitConfig;
 use widgets;
+use CGI;
 use auth;
 use User;
 use Rubric;
