@@ -1,3 +1,25 @@
+2004-04-04 jnerad
+
+	- (Minor Feature) Moved saving to file for requests (which is
+	possibly an artifact that is completely useless at this point due
+	to the improved parsing routines) to saving to database for easier
+	lookups and less issues with permissions... this should ease setup
+	slightly.
+
+	- (Minor Bugfix) Fixed Bug #1729 (Annotation Display is Off.
+	Sites that have cascading style sheets linked to using the "link"
+	tag should be vastly improved.
+	
+2004-03-29 jnerad
+
+	- (Minor Optimization) in EvalVector.getDisplayData, instead of
+	pulling a whole new User object, just lookup the information
+	yourself.  It is much quicker.  (I think... haven't and won't
+	benchmark)
+	
+	- (Minor Bugfix) Problems with template in the addEvalVectors
+	script.
+	
 2004-03-20 jnerad
 
 	- (Minor Bugfix) Fixing a problem with non-standars "X" headers
