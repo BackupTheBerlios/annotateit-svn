@@ -53,8 +53,8 @@ sub authenticated {
   my ($password,$name, $cookie) = ();
   my ($ctx, $data, $digest, $nmCookie, $ahCookie, $rvCookie, $eaCookie) = ();
   my ($C) = ();
-  if (defined ($C) and ref($C) eq 'REF') {
-      $C = $$C;
+  if (defined ($C_ref) and ref($C_ref) eq 'REF') {
+      $C = $$C_ref;
   } else {
       warn "The CGI object was not passed. \n";
       die "  Caller: " . join ": ", caller();

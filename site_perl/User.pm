@@ -176,7 +176,7 @@ sub isLockedOut {
 }
 sub getAccessLevel {
   my ($self) = @_;
-  my $v = $self->{AccessLevel};
+  my $v = $self->{AccessLevel} || 0;
   return $v;
 }
 sub getDateRegistered {
@@ -207,8 +207,10 @@ sub getNoteType {
 sub hasPrivilege {
   my ($self, $privilege) = @_;
   my ($group,$priv) = split /\./, $privilege;
-  my $al = $self->getAccessLevel;
-  if (defined $privileges->{$al}{$group}{$priv} and
+  my $al = $self->getAccessLevel || 0;
+  if (defined $privileges->{$al} and
+      defined $privileges->{$al}{$group} and
+      defined $privileges->{$al}{$group}{$priv} and
       $privileges->{$al}{$group}{$priv}) {
     return 1;
   } else { 
@@ -217,7 +219,7 @@ sub hasPrivilege {
 }
 sub getEmail {
   my ($self) = @_;
-  my $v = $self->{Email};
+  my $v = $self->{Email} || "";
   return $v;
 }
 sub getSchool {
