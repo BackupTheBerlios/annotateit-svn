@@ -39,9 +39,9 @@ our $user = User->load(dbh => $dbh,
 $user->loadGroups;
 our $annotation = Annotation->load(dbh => $dbh,
 				   ID => $annotationID);
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
-my $scriptdir = $config->param("server.scriptdirectory");
+our $scriptdir = $config->param("server.scriptdirectory");
 if (!($authInfo->{LoggedIn})) {
   my $vars = { scriptdir => $scriptdir,
 	       randomValue => &auth::randomValue(),
@@ -57,12 +57,12 @@ if (!($authInfo->{LoggedIn})) {
 
 # new for clickthrough makes and saves a new clickthrough object.
 
-my $ct = Clickthrough->new( dbh => $dbh,
+our $ct = Clickthrough->new( dbh => $dbh,
 			    AnnotationID => $annotationID,
 			    UserID => $user->getID );
 
  
-my $vars = $annotation->getDisplayData({CurrentUser => $user});
+our $vars = $annotation->getDisplayData({CurrentUser => $user});
 if (($user->hasPrivilege("Own.SeeAnonymousAuthors") and
     $user->hasGroup($annotation->getGroupID)) or
     $user->hasPrivilege("Other.SeeAnonymousAuthors")) {
