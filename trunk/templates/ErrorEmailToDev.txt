@@ -19,22 +19,17 @@
 #   http://www.gnu.org/licenses/gpl.txt 
 
 %]
-@product = Annotateit
-@component = unknown
-@version = .2
-@priority = P3
-@bug_severity = normal
-@rep_platform = All
-@op_sys = All
-@short_desc = 500 Error At [% time %]
 
-A 500 error has occurred.  The time is now [% time %].
+**** Automatically Generated Error Report ****
+
+A 500 error has occurred and was trapped.  The time is now [% time %].
 
 Here is what we know:
 
 Host: [% ServerName %]
 Remote Server Admin: [% ServerAdmin %]
 Script URI: [% ScriptURI %]
+User: [% IF (User.FirstName && User.LastName) %][% User.FirstName %] [% User.LastName %][% ELSE %]Not Logged In[% END %]
 
 Error Message: 
 
@@ -43,3 +38,4 @@ Error Message:
 Last 5 lines of Error Logs: 
 
 [% ErrorLogTail %]
+
