@@ -125,9 +125,10 @@ sub delete {
 }
 sub getDisplayData {
   my ($self, $param) = @_;
-  my $owner = User->load(dbh => $self->{dbh},
-			 ID => $self->OwnerID);
-  my $ownerName = $owner->getFirstName . " " . $owner->getLastName;
+  my $sth = $self->{dbh}->prepare("SELECT FirstName, LastName FROM user WHERE ID = ?");
+  $sth->execute($self->OwnerID);
+  my ($fn,$ln) = $sth->fetchrow_array;
+  my $ownerName = "$fn $ln";
   my $rv = { MaximumValue => $self->MaximumValue,
 	     MinimumValue => $self->MinimumValue,
 	     Increment => $self->Increment,
