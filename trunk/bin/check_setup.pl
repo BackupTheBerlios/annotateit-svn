@@ -4,8 +4,8 @@ use warnings;
 
 print "Checking Modules\n";
 
-my @modules = qw( HTML::Parser HTML::Scrubber DBI DBD::mysql 
-		  Data::Dumper Template Config::Simple 
+my @modules = qw( Apache::DBI HTML::Parser HTML::Scrubber DBI DBD::mysql 
+		  Data::Dumper Template 
 		  Date::Calc IO::File CGI MIME::Lite IO::Handle 
 		  URI Time::HiRes Benchmark Calendar::Simple Net::DNS 
 		  LWP::UserAgent HTTP::Request::Common Digest::MD5 
