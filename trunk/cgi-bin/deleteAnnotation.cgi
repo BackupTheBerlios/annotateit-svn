@@ -32,12 +32,12 @@ use auth;
 use PredefinedAnnotation;
 our $C = CGI->new;
 our $config = $AnnotateitConfig::C;
-our ($dbh, $authInfo, $cgiDir,$scriptdir);
+our ($dbh, $authInfo, $serverURL,$scriptdir);
 our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
 $dbh = &widgets::dbConnect($config);
 $scriptdir = $config->{server}{scriptdirectory};
-$cgiDir = $config->{server}{url};
+$serverURL = $config->{server}{url};
 $authInfo = &auth::authenticated($dbh,\$C);
 our $action = $C->param("action") || "";
 our $ID = $C->param("ID") || "";
@@ -57,7 +57,7 @@ my $pda = PredefinedAnnotation->load( dbh => $dbh,
 if ($action eq "DELETE") {
 
   $pda->delete if ($pda->getUserID eq $authInfo->{UserID});
-  print $C->redirect($cgiDir."manageAnnotations.cgi");
+  print $C->redirect($serverURL.$scriptdir."manageAnnotations.cgi");
   exit;
 } else {
   my $vars = $pda->getDisplayData;
