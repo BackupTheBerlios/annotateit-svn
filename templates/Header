@@ -24,7 +24,6 @@
 <html>
   <head>
     <title>[% Title %]</title>
-    <script type="text/javascript" language="javascript" src="/inc/awstats_misc_tracker.js"></script>
     [% UNLESS Title == 'No URL was Specified' %]
     [% INCLUDE "siteJavascript.js" %]
     [% END %]
