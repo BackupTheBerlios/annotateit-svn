@@ -23,24 +23,21 @@
 %]
   <body>
     <h1>[% Title %]</h1>
+[% IF AnnotatedURLs.size() %]
 	URLs you have annotated:<br />
-
+	<table>
+	  <tr>
+	    <th>URL (Click to View)</th>
+	    <th>Show Annotations</th>
+          </tr>
     [% FOREACH AnnotatedURLs %]
-    <a href="[% ServerURL %][% scriptdir %][% ProxyLink %]/[% AnnotationURL %]">[% AnnotationURL %]</a><br />
+      <tr>
+        <td><a href="[% ServerURL %][% scriptdir %][% ProxyLink %]/[% AnnotationURL %]">[% AnnotationURL %]</a></td>
+	<td align="center"><a href="[% scriptdir %]displayWholePageNotes.cgi?url=[% AnnotationURL %]">X</a></td>
+      </tr>
     [% END %]
-    [% SET WhichGroup = "Assignments for this group's parent Group" %]
-    [% FOREACH ParentGroupsAssignments %]
-    [% INCLUDE assignmentTableInclude.html %]
-    [% END %]
-    [% SET WhichGroup = "Assignments for this group" %]
-    [% FOREACH ThisGroupsAssignments %]
-    [% INCLUDE assignmentTableInclude.html %]
-    [% END %]
-    <hr />
-    [% IF CanAddAssignments %]
-    <p>You can <a href="[% scriptdir %]addAssignment.cgi?GroupID=[% Group.GroupID %]">add an assignment</a> to this group.</p>
-    <hr />
-    [% END %]
+   </table>    
+[% END %]
 [% INCLUDE Footer %]
   </body>
 </html>
