@@ -46,7 +46,9 @@ if (!(defined $authInfo->{LoggedIn} and $authInfo->{LoggedIn}) ||
 	      formAction => "login.cgi",
 	      randomValue => &auth::randomValue(),
 	      hiddenVar => [{name => "noReload", value =>$noReload}]};
-  my $loginAttempts = $C->param("LoginAttempts") || 0;
+  my $loginAttempts = $C->param("LoginAttempts") || 0; # loginAttempts
+  # keeps track of the number of times we fail to login.
+  # Login Failed is a simple boolean that tells us whether our login failed
 
   if ($loginAttempts > 0) {
     $vars->{"LoginAttempts"} = $loginAttempts + 1;
