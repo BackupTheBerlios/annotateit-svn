@@ -26,6 +26,7 @@ use strict;
 use Data::Dumper;
 use lib qw(../site_perl);
 use AnnotateitConfig;
+$ENV{PATH} = "/usr/bin:/usr/local/bin";
 my $config = $AnnotateitConfig::C;
 my $C = CGI->new();
 
@@ -49,11 +50,11 @@ $t->process("Error.html",$vars) || die $t->error;
 $t->process("ErrorEmailToDev.txt", $vars, \$messageText);
 
 
-my $message = MIME::Lite->new( To => 'bugzilla-daemon@buzzmaven.com',
+my $message = MIME::Lite->new( To => 'jack@buzzmaven.com',
 			       From => 'annotateit-dev@buzzmaven.com',
 			       Subject => "Programming Defect: $time",
 			       Type => 'TEXT',
 			       Data => $messageText );
 $message->send;
-warn "Error trapping occurred\n";
+warn "--- Error trapping occurred ---\n\n";
 exit;
