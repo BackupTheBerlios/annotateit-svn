@@ -30,9 +30,9 @@ use URI;
 use CGI;
 our $C = CGI->new;
 
-my $urlExcluded = 0;
+our $urlExcluded = 0;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($template,$dbh, $authInfo, $scriptdir) = ();
 $scriptdir = $config->param("server.scriptdirectory");
 $dbh = &widgets::dbConnect($config);;
