@@ -26,8 +26,10 @@
 
 <table>
  <tr>
-  <td>[% EV.Title %][% IF EV.Weight %] ([% EV.Weight %])
+  <td>[% EV.Title %][% IF EV.Weight %] ([% EV.Weight %])[% END %]</td>
   [% FOREACH EV.Table %]
-  <td>[% Value %] <input type="radio" name="EV_[% EV.ID %][% IF EV.Weight %]_Weight_[% EV.Weight %][% END %]" value="[% Value %]" /></td>[% END %]
+   <td>[% Value %] <input type="radio" name="EV_[% EV.ID %][% IF EV.Weight %]_Weight_[% EV.Weight %][% END %]" value="[% Value %]" /></td>
+  [% END %]
+
  </tr>
 </table>

@@ -73,9 +73,13 @@
   If you have reached this page in error, please report the details to <a href="mailto:support@buzzmaven.com">support@buzzmaven.com</a> the page you were trying to annotate by copying the address from the location bar in your browser into the email message.</p>
         [% ELSIF Error == 'CannotAnnotate' %]
         <p>The resource you requested, located at <a href="[% Resource %]">[% Resource %]</a> cannot be annotated by this system.</p>
-<!-- [% ENV %] -->
- 
+
 [% END %]
+<!-- [% ENV %] -->
+[% IF error %]
+[% error %]
+[% END %] 
+
     [% IF BackPage %]<p><a href="[% serverurl %][% scriptdir %][% BackPage %]">Back</a></p>[% END %]
     <p><a href="[% serverurl %][% scriptdir %]manageUserInfo.cgi">Main Menu</a></p>
     [% INCLUDE Footer %]

@@ -22,4 +22,4 @@
 %]
 [% EV.Title %]
 [% INCLUDE EvalVectorRubricTable %]
-[% EV.Title %][% IF EV.Weight %] ([% EV.Weight %]) <input type="text" name="EV_[% EV.ID %][% IF EV.Weight %]_Weight_[% EV.Weight %][% END %]" value="[% EV.Value %]" />
+[% EV.Title %][% IF EV.Weight %] ([% EV.Weight %]) [% END %]<input type="text" name="EV_[% EV.ID %][% IF EV.Weight %]_Weight_[% EV.Weight %][% END %]" value="[% EV.Value %]" />
