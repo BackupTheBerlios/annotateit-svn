@@ -1,3 +1,49 @@
+2004-03-20 jnerad
+
+	- (Minor Bugfix) Fixing a problem with non-standars "X" headers
+	that are improperly interpreted as text/plain by mozilla.
+	
+	- (Minor Bugfix) Eliminated duplicate urls differing only by a
+	trailing slash.  They should both be the same, now. (Belios Bug
+	1690)
+	
+	- (Minor Feature) Added text annotated to phrasal notes on
+	displayWholePageNotes.cgi
+
+	- (Minor Feature) Added text annotated to displayAnnotation.cgi
+	
+	- (Minor Feature) Added permissions to check for clickthrouhgs on
+	displaying whole page notes.
+	
+	- (Minor Feature) changed order so that showing whole page notes
+	shows up first in the annotations list.
+	
+	- (Minor Feature) added link to whole page notes on annotated URLs
+	
+	- (Minor Bugfix) mod_perl modifications to evaluateDocument.cgi
+
+	- (Minor Feature) added assignment weights to
+	displayAssignments.cgi (Berlios Bug 1654, Task 1111)
+	
+	
+2004-03-17 jnerad
+
+	- (Minor Bugfix) Inheritance problems with Rubric and Object.  
+
+	- (Minor Feature) Link back to main menu from manage rubrics
+
+	- (Minor Bugfix) mod_perl modifications to manageRubrics.cgi,
+	assignmentStats.cgi, UserDetail.cgi, createUser.cgi,
+	deleteAnnotations.cgi, getAnnotationInfo.cgi,
+	displayAnnotation.cgi, comments.cgi, sendPassword.cgi,
+	evaluateDocument.cgi
+
+	- (Minor Bugfix) Taint mode modifications to comments.cgi,
+	sendPassword.cgi
+
+	- (Code Cleanup) Removed some of the error messages that get sent
+	to the error log as well as the administrator on error.
+	
 2004-03-16 jnerad
 
 	- (Code Cleanup) Continuing Taint Check cleanup.
