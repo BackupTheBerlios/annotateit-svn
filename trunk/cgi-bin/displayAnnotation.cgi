@@ -63,6 +63,8 @@ our $ct = Clickthrough->new( dbh => $dbh,
 
  
 our $vars = $annotation->getDisplayData({CurrentUser => $user});
+$vars->{Annotation} = $annotation->getDisplayData({CurrentUser => $user});
+$vars->{User} = $user->getDisplayData;
 if (($user->hasPrivilege("Own.SeeAnonymousAuthors") and
     $user->hasGroup($annotation->getGroupID)) or
     $user->hasPrivilege("Other.SeeAnonymousAuthors")) {
