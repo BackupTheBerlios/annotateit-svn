@@ -154,7 +154,7 @@ sub printEditForm {
   $vars->{scriptdir} = $scriptdir;
   $vars->{editUserInfo} = 1;
   if ($args{DeleteHeaders}) {
-    print $C->header(-cookie => &auth::expireAuthTokens);
+    print $C->header(-cookie => &auth::expireAuthTokens(\$C);
   } else {
     print $C->header(-cookie => $authInfo->{cookie});
   }
