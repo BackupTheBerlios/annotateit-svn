@@ -33,17 +33,17 @@ our $C = CGI->new;
 
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
-my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
+our $config = Config::Simple->new("../etc/annie.conf");
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
+our $scriptdir = $config->param("server.scriptdirectory");
 our $serverURL = $config->param("server.url");
 our $docURL = $config->param("server.documenturl");
-my $action = $C->param("action") || "";
+our $action = $C->param("action") || "";
 our $docDir = $config->param("server.documentdirectory");
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
-my $ID = $C->param("ID");
+our $ID = $C->param("ID");
 if (!$authInfo->{LoggedIn}) {
   my $vars = { scriptdir => $scriptdir,
 	       randomValue => &auth::randomValue(),
@@ -56,14 +56,14 @@ if (!$authInfo->{LoggedIn}) {
   exit;
 }
 
-my $assignment = Assignment->load( dbh => $dbh,
+our $assignment = Assignment->load( dbh => $dbh,
 				   ID => $ID);
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID} );
 
-my $aGID = $assignment->getGroupID;
-my $aUID = $assignment->getUserID;
-my $vars = { scriptdir => $scriptdir,
+our $aGID = $assignment->getGroupID;
+our $aUID = $assignment->getUserID;
+our $vars = { scriptdir => $scriptdir,
 	     formAction => 'assignmentDetails.cgi',
 	     Assignment => $assignment->getDisplayData,
 	     Stats => $assignment->getStats($user) };
