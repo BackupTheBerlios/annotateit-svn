@@ -1,3 +1,10 @@
+2004-03-16 jnerad
+
+	- (Minor Feature) Added some explanation of Active/Inactive
+	Open/Closed Groups in manageGroups.cgi template
+
+	- (Minor Bugfix) Fixed using bad main:: variables instead of good Config::Simple object
+	
 2004-03-14 jnerad
 
 	- Continuing work on mod_perl compatability move.
