@@ -94,7 +94,8 @@ $ which perl
 Usually, it is in the /usr/bin directory or the /usr/local/bin
 directory.  But some administrators put it in very strange places.
 
-If perl is not in the /usr/local/bin directory issue this command in the cgi-bin directory:
+If perl is not in the /usr/local/bin directory issue this command in
+the cgi-bin directory:
 
 $ perl -pi -e 's|#!/usr/local/bin/perl|#!/path/to/perl|' *.cgi
 
@@ -102,6 +103,16 @@ where '/path/to/perl' is the actual path to the perl interpreter you
 found by issuing the which command, above.  The perl -pi -e command
 substitutes the appropriate perl location for the bad one and saving
 the file back.
+
+FOR mod_perl USERS!
+
+You must install Apache::DBI and add
+
+PerlModule Apache::DBI
+
+to your httpd.conf file before loading any modules associated with
+AnnotateIt! If you do not, you will quickly overrun your allowed
+database connection limit.
 
 All done.  Let me know how it goes: annotateit-users@buzzmaven.com.
 
