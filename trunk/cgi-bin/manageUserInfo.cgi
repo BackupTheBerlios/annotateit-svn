@@ -61,7 +61,7 @@ if (!$authInfo->{LoggedIn}) {
   } else {
     $vars->{CanHaveAssignments} = 0;
   }
-
+  $vars->{User} = $user->getDisplayData;
   $vars->{Groups} = $user->getGroupDisplayData;
   $vars->{scriptdir} = $scriptdir;
   $vars->{searchAnnotationsLink} = "searchAnnotations.cgi";
