@@ -45,13 +45,13 @@ unless ($authInfo->{LoggedIn}) {
 	      randomValue => &auth::randomValue(),
 	      formAction => "viewEvaluationVector.cgi",
 	     };
-  print $http::C->header();
+  print $C->header();
   $template->process("loginScriptForm.html",$vars );
   exit;
 }
 my $user = User->load(dbh => $dbh,
 		      ID => $authInfo->{UserID});
-my $evID = $http::C->param("EvalVectorID");
+my $evID = $C->param("EvalVectorID");
 $evID =~ s/[^\d]//g;
 my $ev = EvalVector->load( dbh => $dbh,
 			   ID => $evID );
@@ -63,7 +63,7 @@ my $vars = { scriptdir => $scriptdir,
 	     Title => "View An Evaluation Vector",
 	     EV => $edd,
 	     NoFormElements => 1};
-print $http::C->header(-cookie=>$authInfo->{cookie});
+print $C->header(-cookie=>$authInfo->{cookie});
 $template->process("ViewEvalVector.html",$vars) or die $template->error;
 exit;
 

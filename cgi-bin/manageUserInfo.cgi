@@ -29,7 +29,7 @@ use auth;
 use User;
 use Data::Dumper;
 use CGI;
-
+our $C = CGI->new();
 my $config = Config::Simple->new("../etc/annie.conf");
 our ($template,$dbh, $authInfo, $scriptdir) = ();
 $scriptdir = $config->param("server.scriptdirectory");

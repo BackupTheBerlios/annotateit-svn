@@ -32,16 +32,17 @@ use Assignment;
 use EvalVector;
 use Date::Calc qw(Today Delta_Days );
 $ENV{TMPDIR} = "/tmp";
+our $C = CGI->new();
 my @chars = ('A'..'Z','a'..'z',0..9);
 my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
+our $scriptdir = $config->param("server.scriptdirectory");
 our $serverURL = $config->param("server.url");
 our $docURL = $config->param("server.documenturl");
 my $action = $C->param("action") || "";
 our $docDir = $config->param("server.documentdirectory");
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 my $ID = $C->param("ID");
 if (!$authInfo->{LoggedIn}) {
@@ -55,13 +56,13 @@ if (!$authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars) || die $template->error();
   exit;
 }
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID} );
 my $groups = $user->getGroupDisplayData;
 my $udd = $user->getDisplayData;
-my $assignment = Assignment->load( dbh => $dbh,
+our $assignment = Assignment->load( dbh => $dbh,
 				   ID => $ID );
-&checkAuth;
+&checkAuth();
 my ($evalVectorIDs,$evalVectorWeights) = $assignment->getEvalVectorIDs;
 my @vectors = ();
 for my $id (@{$evalVectorIDs}) {
@@ -81,7 +82,7 @@ for my $id (@{$rubrics}) {
 }
 my $add = $assignment->getDisplayData;
 my $docDD = $assignment->getDocumentsDisplayData($user);
-my $vars = { scriptdir => $scriptdir,
+our $vars = { scriptdir => $scriptdir,
 	     serverurl => $serverURL,
 	     formAction => "assignmentDetails.cgi",
 	     action => "save",

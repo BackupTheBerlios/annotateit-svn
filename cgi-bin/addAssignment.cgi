@@ -43,7 +43,7 @@ my $serverURL = $config->param("server.url");
 my $docURL = $config->param("server.documenturl");
 my $action = $C->param("action") || "";
 my $docDir = $config->param("server.documentdirectory");
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 my $GroupID = $C->param("GroupID") || "";
 my $user = User->load( dbh => $dbh,
@@ -85,7 +85,14 @@ if ($action eq "save") {
   my $Weight = $C->param("Weight") || 1;
   $Weight =~ s/[^\d]//;
   my $BackPage = &widgets::scrub($C->param("BackPage") || "");
+  # get the evaluation vectors and their weights:
   my @evalVectorIDs = &widgets::scrub($C->param("EvalVector"));
+  my $evalVectorHash = {};
+  for my $ev (@evalVectorIDs) {
+      my $wParam = "Weight_$ev";
+      my $w = $C->param($wParam) || "";
+      $evalVectorHash->{$ev} = $w;
+  }
   my @errors = ();
   my $deltaDays = eval { (Delta_Days(Today,$YearDue,$MonthDue,$MDayDue) < 1) };
   if  (! defined $deltaDays ) { # error from delta days
@@ -130,7 +137,7 @@ if ($action eq "save") {
     $assignment->setDescription($Description);
     $assignment->setDueDate($dueDate);
     $assignment->save;
-    $assignment->setEvalVectors(\@evalVectorIDs);
+    $assignment->setEvalVectors($evalVectorHash);
   }
   print $C->header(-cookie=>$authInfo->{cookie});
   $template->process("Assignments.html", $vars) or die $template->error();

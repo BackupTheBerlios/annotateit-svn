@@ -23,12 +23,13 @@ use strict;
 use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use widgets;
-use http;
+use CGI;
 use auth;
 use User;
 use Assignment;
 use Date::Calc qw(Today Delta_Days );
 use Template;
+our $C = CGI->new();
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
 my $config = Config::Simple->new("../etc/annie.conf");
@@ -37,9 +38,9 @@ my $authInfo = &auth::authenticated($dbh,\$C);
 my $scriptdir = $config->param("server.scriptdirectory");
 my $serverURL = $config->param("server.url");
 my $docURL = $config->param("server.documenturl");
-my $action = $http::C->param("action") || "";
+my $action = $C->param("action") || "";
 my $docDir = $config->param("server.documentdirectory");
-my $ID = $http::C->param("ID");
+my $ID = $C->param("ID");
 my $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 
@@ -52,7 +53,7 @@ if (!$authInfo->{LoggedIn}) {
 			     {paramName => "action",paramValue => $action},
 			     {paramName => "ID", paramValue => $ID}]
 	       };
-  print $http::C->header();
+  print $C->header();
   $template->process("loginScriptForm.html",$vars) || die $template->error();
   exit;
 }
@@ -71,7 +72,7 @@ if ($action eq "delete") {
 				    ID => $ID );
   $Assignment->delete($docDir);
 
-  print $http::C->redirect(-cookie=>$authInfo->{cookie},
+  print $C->redirect(-cookie=>$authInfo->{cookie},
 			   -url => "$serverURL$scriptdir"."displayAssignments.cgi");
   exit;
 } elsif ($action eq "undelete") {
@@ -82,7 +83,7 @@ if ($action eq "delete") {
 				     ID => $ID );
   $assignment->undelete;
 
-  print $http::C->redirect(-url=>"$serverURL$scriptdir"."displayAssignments.cgi",
+  print $C->redirect(-url=>"$serverURL$scriptdir"."displayAssignments.cgi",
 			  -cookie=>$authInfo->{cookie});
 
 }

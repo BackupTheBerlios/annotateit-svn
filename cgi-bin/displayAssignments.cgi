@@ -35,7 +35,7 @@ our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
 my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
+our $dbh = &widgets::dbConnect($config);
 my $authInfo = &auth::authenticated($dbh,\$C);
 my $scriptdir = $config->param("server.scriptdirectory");
 my $serverURL = $config->param("server.url");
@@ -45,7 +45,7 @@ my $docDir = $config->param("server.documentdirectory");
 my $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 my $GroupID = $C->param("GroupID") || "";
-my $monthAdjustment = $C->param("mAdj") || 0;
+our $monthAdjustment = $C->param("mAdj") || 0;
 
 
 if (!$authInfo->{LoggedIn}) {

@@ -34,24 +34,24 @@ use CGI::Carp 'fatalsToBrowser';
 use CGI;
 our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
-my @chars = ('A'..'Z','a'..'z',0..9);
-my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
+our @chars = ('A'..'Z','a'..'z',0..9);
+our $config = Config::Simple->new("../etc/annie.conf");
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
+our $scriptdir = $config->param("server.scriptdirectory");
 our $serverURL = $config->param("server.url");
 our $docURL = $config->param("server.documenturl");
-my $action = $C->param("action") || "";
+our $action = $C->param("action") || "";
 our $docDir = $config->param("server.documentdirectory");
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
-my $docID = $C->param("DocumentID") || 0; # coming from manageDocuments.cgi
-my $document = "";
-my $outboxStatus = $C->param("OutboxStatus") || "";
+our $docID = $C->param("DocumentID") || 0; # coming from manageDocuments.cgi
+our $document = "";
+our $outboxStatus = $C->param("OutboxStatus") || "";
 if ($docID) {
   $document = Document->load(dbh => $dbh, ID=> $docID);
 }
-my $AssignmentID = $C->param("AssignmentID") || "";
+our $AssignmentID = $C->param("AssignmentID") || "";
 if (!$authInfo->{LoggedIn}) {
   my $vars = { scriptdir => $scriptdir,
 	       randomValue => &auth::randomValue(),
@@ -63,7 +63,7 @@ if (!$authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars) || die $template->error();
   exit;
 }
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID} );
 &unauthorized("uploadGeneral") if (! $user->hasPrivilege("Other.UploadDocument")
 		  and ! $user->hasPrivilege("Own.UploadDocument") );

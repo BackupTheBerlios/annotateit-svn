@@ -33,16 +33,16 @@ our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
 my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
-my $scriptdir = $config->param("server.scriptdirectory");
-my $serverURL = $config->param("server.url");
-my $docURL = $config->param("server.documenturl");
-my $action = $C->param("action") || "";
-my $docDir = $config->param("server.documentdirectory");
-my $ID = $C->param("ID");
-my $vars = {};
-my $template = Template->new( RELATIVE => 1,
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
+our $scriptdir = $config->param("server.scriptdirectory");
+our $serverURL = $config->param("server.url");
+our $docURL = $config->param("server.documenturl");
+our $action = $C->param("action") || "";
+our $docDir = $config->param("server.documentdirectory");
+our $ID = $C->param("ID");
+our $vars = {};
+our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
 
 if (!$authInfo->{LoggedIn}) {

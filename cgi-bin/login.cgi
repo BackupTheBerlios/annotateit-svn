@@ -54,7 +54,7 @@ if (!(defined $authInfo->{LoggedIn} and $authInfo->{LoggedIn}) ||
     $vars->{"LoginAttempts"} = 1;
     $vars->{"LoginFailed"} = 0;
   }
-  print $C->header(-cookie=>&auth::expireAuthTokens);
+  print $C->header(-cookie=>&auth::expireAuthTokens(\$C));
   $template->process("loginScriptForm.html",$vars) or die $template->error();
   exit;
 } else {

@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl -wT
-##############################################
-## This manages the user's documents
+#############################################
+## Sends email to those who have been invited to join
 ##
 # Copyright 2003, Buzzmaven Co.
 
@@ -32,6 +32,7 @@ use User;
 use Group;
 use MIME::Lite;
 use CGI;
+$ENV{PATH} = "/usr/bin:/usr/sbin:/usr/local/bin";
 our $C = CGI->new;
 my $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $authInfo,$scriptdir,$cgiDir, $docDir, $serverURL,$docURL);
