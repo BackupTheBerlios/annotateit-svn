@@ -55,7 +55,7 @@ sub getResults {
     my @quoted = map { "'$_'" } @gids;
     my $gids = join ", ", @quoted;
     push @params, $user->getID;
-    push @whereCond, "((A.GroupID IN ($gids)) OR (A.GroupID = 'Private' AND UserID = ?))";
+    push @whereCond, "((A.GroupID IN ($gids)) OR (A.GroupID = 'Private' AND C.UserID = ?))";
   }
   if ($GroupID) {
     push @params, $GroupID;
