@@ -32,7 +32,7 @@ our $C = CGI->new;
 
 my $config = Config::Simple->new("../etc/annie.conf");
 our $dbh = &widgets::dbConnect($config);
-my $currentURL = $http::C->param("url") || "";
+my $currentURL = $C->param("url") || "";
 $currentURL =~ s/[<>]//g;
 our $authInfo = &auth::authenticated($dbh,\$C);
 our $user = User->load(dbh => $dbh,
@@ -47,7 +47,7 @@ if (!($authInfo->{LoggedIn})) {
 	       formAction => "displayWholePageNotes.cgi",
 	       hiddenVar => [{ name => "url",
 			       value => $currentURL }] };
-  print $http::C->header;
+  print $C->header;
   $template->process("loginScriptForm.html",$vars) or die $template->error;
   exit;
 }
@@ -60,7 +60,7 @@ $dd->{DisplayAnnotationURL} = "displayAnnotation.cgi";
 $dd->{scriptdir} = $scriptdir;
 $dd->{currentURL} = $currentURL;
 
-print $http::C->header(-cookie=>$authInfo->{cookie});
+print $C->header(-cookie=>$authInfo->{cookie});
 $template->process("DisplayWholePageNotes.html",$dd) or die $template->error;
 exit;
 

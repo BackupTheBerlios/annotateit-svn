@@ -31,10 +31,10 @@ use Match;
 use MIME::Lite;
 use URI;
 use CGI;
-use http;
+use LWP::UserAgent;
 our $C = CGI->new;
-
-my $config = Config::Simple->new("../etc/annie.conf");
+$ENV{PATH} = "/usr/bin:/bin:/usr/local/bin";
+our $config = Config::Simple->new("../etc/annie.conf");
 our $dbh = &widgets::dbConnect($config);
 our $authInfo = &auth::authenticated($dbh,\$C);
 our $scriptdir = $config->param("server.scriptdirectory");
@@ -52,8 +52,8 @@ $selectedtext =~ s/\s+$//s;
 our $context = $C->param("context") || $selectedtext;
 $context =~ s/^\s+//s;
 $context =~ s/\s+$//s;
-my $anonymous = $C->param("Anonymous") || "";
-my $template = Template->new( RELATIVE => 1,
+our $anonymous = $C->param("Anonymous") || "";
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates" );
 
 if (!$authInfo->{LoggedIn}) {
@@ -72,7 +72,7 @@ if (!$authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html", $vars) or die $template->error;
   exit;
 }
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID} );
 our $query = "";
 our $reqParams = {};
@@ -109,14 +109,8 @@ our $title = &widgets::scrub($C->param("title"));
 
 &saveAnnotation({selectedtextRE => $selectedtext,
 		 contextRE => $selectedtext })if ($selectedtext eq "(Whole Page)");
-### 
-### This needs rewritten
-###
-our $response = &http::fetchURL({url => $url,
-				 vars => $reqParams});
-###
-### End rewriting
-###
+our $response = &getResponse({url => $url,
+			      vars => $reqParams});
 our $content = $response->content();
 my $result = Match::checkPhrase({content => $content,
 				selectedtext => $selectedtext,
@@ -212,4 +206,25 @@ sub checkURLExclusion {
   } else {
     return 1;
   }
+}
+
+sub getResponse {
+    my $args = shift;
+    my $url = $args->{url};
+    my $vars_passed = $args->{vars};
+    my $ua = LWP::UserAgent->new();
+    my $response = "";
+    my @request_vars = ();
+    if (defined $vars_passed and ref($vars_passed) eq "HASH") {
+	my @request_vars = %{$vars_passed};
+    } 
+    my $canonical_request = "";
+    if (ref $url eq "URI") {
+	$canonical_request->clone->canonical();
+    } else {
+	$canonical_request = URI->new($url)->canonical;
+    }
+    return $ua->get($canonical_request,
+		   @request_vars,
+		    Referer => $canonical_request);
 }

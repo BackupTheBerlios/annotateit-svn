@@ -38,23 +38,23 @@ use Template;
 use File::Basename;
 my $config = Config::Simple->new("../etc/annie.conf");
 $CGI::POST_MAX = 1024*100;
-my $C = CGI->new;
+our $C = CGI->new;
 
-my $test = $C->param("test") || "";
-my $template=Template->new( RELATIVE => 1,
+our $test = $C->param("test") || "";
+our $template=Template->new( RELATIVE => 1,
 			    INCLUDE_PATH => "../templates");
 if ($test) { &run_tests; exit };
-my $output = ""; # the html output from this script
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
+our $output = ""; # the html output from this script
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
 
-my $images_dir = $config->param("server.imagesdirectory");
-my $scriptdir = $config->param("server.scriptdirectory");
-my $vars = { scriptdir => $scriptdir,
+our $images_dir = $config->param("server.imagesdirectory");
+our $scriptdir = $config->param("server.scriptdirectory");
+our $vars = { scriptdir => $scriptdir,
 	     LoggedIn => $authInfo->{LoggedIn},
 	     imagesdir => $images_dir};
 
-my $selfURL = $C->url;
+our $selfURL = $C->url;
 
 # check to see if we need to redirect.  We get our information from the
 # path info for the script, so it is important to do it right.
@@ -63,28 +63,30 @@ my $selfURL = $C->url;
 
 # get the URL whose annotation we are requesting.
 
-my $requestURI = &getRequestURI();
+our $requestURI = &getRequestURI();
 
 
-my $request_method = lc($C->request_method);
+our $request_method = lc($C->request_method);
 
-my $vars_passed = $C->Vars || {};
-my $http_response = &getResponse($requestURI->clone(),
+our $vars_passed = $C->Vars || {};
+our $http_response = &getResponse($requestURI->clone(),
 				 $vars_passed,
 				 $request_method);
 # change the links
-my $content = &insertLinks({content => $http_response->content,
+our $content = &insertLinks({content => $http_response->content,
 			    selfURL => $selfURL,
 			    requestURL => $requestURI->clone});
+
 my ($bodyStart,$bodyEnd) = &getBodyOffset($content);
 $content = &makeRawContent($content);
+
 $content = &insertAnnotationHolders($content);
 &printContent($content,$http_response);
 
 sub printContent {
   my ($content,$http_response) = @_;
-  my $io = IO::Handle->new();
-  $io->fdopen(fileno(STDOUT),"w");
+#  my $io = IO::Handle->new();
+#  $io->fdopen(fileno(STDOUT),"w");
   my $headers = $http_response->headers;
   my $header_key = "";
   my %header_args = ();
@@ -101,10 +103,12 @@ sub printContent {
   # This may be a problem with Template taking over the IO streams,
   # but I haven't the foggiest idea when or why it happens. [shrug]
 
-  $io->print($C->header(%header_args));
-  $io->print($content);
-  $io->close();
-  undef $io;
+  print $C->header(%header_args);
+  print $content;
+#  $io->print($C->header(%header_args));
+#  $io->print($content);
+#  $io->close();
+#  undef $io;
   exit;
 }
 
@@ -238,9 +242,15 @@ sub insertLinks {
   $request_host_with_directory =~ s/\.$//; # in case there is no path
   my $request = $requestURI->as_string;
   my $selfURL = $args->{selfURL};
-  my $reqfile = $request .  $C->remote_addr;
-  $reqfile =~ s/[^\w]+/_/g;
-  $reqfile = "../requests/" . $reqfile;
+  my $taintedReqfile = $request .  $C->remote_addr;
+  $taintedReqfile =~ s/[^\w]+/_/g;
+  $taintedReqfile = "../requests/" . $taintedReqfile;
+  my $reqfile = "";
+  if ($taintedReqfile =~ /^[\w_\.\/]+$/) {
+      $reqfile = $1;
+  } else {
+      warn "$taintedReqfile\n";
+  }
   open REQ, ">$reqfile";
   print REQ $request;
   close REQ;

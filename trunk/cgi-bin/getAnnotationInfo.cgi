@@ -28,7 +28,7 @@ use auth;
 use User;
 use URI;
 use CGI;
-$C = CGI->new;
+our $C = CGI->new;
 
 my $urlExcluded = 0;
 
@@ -39,7 +39,7 @@ $dbh = &widgets::dbConnect($config);;
 $authInfo = &auth::authenticated($dbh,\$C);
 $template = Template->new(RELATIVE => 1,
 			  INCLUDE_PATH => "../templates");
-my $url = &getLocation();
+our $url = &getLocation();
 if (!$authInfo->{LoggedIn}) {
   my $vars = { 
 	      randomValue => &auth::randomValue(),
