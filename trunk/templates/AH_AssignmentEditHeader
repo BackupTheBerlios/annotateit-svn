@@ -1,4 +1,4 @@
-[%# Copyright 2003, Buzzmaven Co.
+[%# Copyright 2003-2004, Buzzmaven Co.
 
 # This file is part of Annotateit.
 
