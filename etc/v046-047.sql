@@ -1,1 +1,0 @@
-ALTER TABLE Assignment ADD COLUMN Weight int;
