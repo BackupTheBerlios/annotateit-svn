@@ -42,7 +42,7 @@ unless ($authInfo->{LoggedIn}) {
   my $vars = {scriptdir => $scriptdir,
 	      randomValue => &auth::randomValue(),
 	      formAction => "viewGroupDetails.cgi"};
-  print $http::C->header;
+  print $C->header;
   $template->process("loginScriptForm.html",$vars);
   exit;
 }
@@ -72,6 +72,6 @@ my $vars = {User  => $user->getDisplayData,
 	 formAction => "viewGroupDetails.cgi",
 	 FromLocation => "viewGroupDetails.cgi",
 	 ViewDetailsURL => "viewGroupDetails.cgi"};
-print $http::C->header(-cookie=>$authInfo->{cookie});
+print $C->header(-cookie=>$authInfo->{cookie});
 $template->process("viewAnnotatedURLs.html",$vars) or die $template->error;
 exit;

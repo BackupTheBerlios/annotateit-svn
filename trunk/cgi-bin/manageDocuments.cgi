@@ -96,7 +96,8 @@ my $userID = $user->getID || 0;
 for my $docID (@{$Documents}) {
   my $doc = Document->load(dbh => $dbh,
 			   ID => $docID);
-  push @{$vars->{Documents}}, $doc->getDisplayData(UserID => $userID);
+  push @{$vars->{Documents}}, $doc->getDisplayData(UserID => $userID,
+						   Config => $config);
 }
 $vars->{AuthorLastName} = $authorLastName;
 $vars->{StartAt} = $startAt;

@@ -111,7 +111,7 @@ for my $userID (keys %{$userEvals}) {
 }
 
 my $vars = { scriptdir => $scriptdir,
-	     Document => $doc->getDisplayData,
+	     Document => $doc->getDisplayData(Config => $config),
 	     Title => "Evaluations",
 	     Evaluations => $evals,
 	     Screen => 2};

@@ -84,7 +84,7 @@ sub noParams {
   }
   my $vars = {noEvalVectors => $noEvalVectors,
 	      User => $user->getDisplayData,
-	      Document => $doc->getDisplayData,
+	      Document => $doc->getDisplayData(Config=>$config),
 	       scriptdir => $scriptdir,
 	       Title => "Evaluate Document",
 	       Screen => 1};
