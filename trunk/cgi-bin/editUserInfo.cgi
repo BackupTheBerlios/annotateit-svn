@@ -141,25 +141,25 @@ sub saveInfo {
 		 DeleteHeaders => $deleteHeaders);
 }
 sub printEditForm {
-  my (%args) = @_;
-  my $user = User->load(dbh => $dbh,
-			ID => $authInfo->{UserID});
-  my $vars = $user->getDisplayData;
-  $vars->{Groups} = $user->getGroupDisplayData;
-  for my $key (keys %args) {
-    $vars->{$key} = $args{$key};
-  }
-  $vars->{EnglishAction} = "Edit";
-  $vars->{formAction} = "editUserInfo.cgi";
-  $vars->{scriptdir} = $scriptdir;
-  $vars->{editUserInfo} = 1;
-  if ($args{DeleteHeaders}) {
-    print $C->header(-cookie => &auth::expireAuthTokens(\$C);
-  } else {
-    print $C->header(-cookie => $authInfo->{cookie});
-  }
-  $template->process("createUser.html",$vars);
+    my (%args) = @_;
+    my $user = User->load(dbh => $dbh,
+			  ID => $authInfo->{UserID});
+    my $vars = $user->getDisplayData;
+    $vars->{Groups} = $user->getGroupDisplayData;
+    for my $key (keys %args) {
+	$vars->{$key} = $args{$key};
+    }
+    $vars->{EnglishAction} = "Edit";
+    $vars->{formAction} = "editUserInfo.cgi";
+    $vars->{scriptdir} = $scriptdir;
+    $vars->{editUserInfo} = 1;
+    if ($args{DeleteHeaders}) {
+	print $C->header(-cookie => &auth::expireAuthTokens(\$C));
+    } else {
+	print $C->header(-cookie => $authInfo->{cookie});
+    }
+    $template->process("createUser.html",$vars);
 
-  exit;
+    exit;
 }
 
