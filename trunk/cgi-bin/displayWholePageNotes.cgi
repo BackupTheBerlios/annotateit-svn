@@ -30,17 +30,17 @@ use Annotation;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our $dbh = &widgets::dbConnect($config);
-my $currentURL = $C->param("url") || "";
+our $currentURL = $C->param("url") || "";
 $currentURL =~ s/[<>]//g;
 our $authInfo = &auth::authenticated($dbh,\$C);
 our $user = User->load(dbh => $dbh,
 		       ID => $authInfo->{UserID});
 
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
-my $scriptdir = $config->param("server.scriptdirectory");
+our $scriptdir = $config->param("server.scriptdirectory");
 if (!($authInfo->{LoggedIn})) {
   my $vars = { scriptdir => $scriptdir,
 	       randomValue => &auth::randomValue(),
@@ -52,7 +52,7 @@ if (!($authInfo->{LoggedIn})) {
   exit;
 }
 $user->loadGroups;
-my $dd;
+our $dd = {};
 
 $dd->{Annotations} = $user->getAnnotationsDisplayData({URL => $currentURL});
 $dd->{User} = $user->getDisplayData;
