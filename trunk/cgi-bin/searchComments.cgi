@@ -31,15 +31,15 @@ use User;
 use CommentsSearch;
 use CGI;
 our $C = CGI->new;
-my $config = $AnnotateitConfig::C;
-my $scriptdir = $config->{server}{scriptdirectory};
-my $serverURL = $config->{server}{url};
-my $action = $C->param("action") || "";
+our $config = $AnnotateitConfig::C;
+our $scriptdir = $config->{server}{scriptdirectory};
+our $serverURL = $config->{server}{url};
+our $action = $C->param("action") || "";
 our ($dbh, $authInfo);
 
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
 
 unless ($authInfo->{LoggedIn}) {
@@ -50,7 +50,7 @@ unless ($authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars) or die $template->error;
   exit;
 }
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID} );
 unless ($user->hasPrivilege("Other.SearchComments") or
 	$user->hasPrivilege("Own.SearchComments")) {
