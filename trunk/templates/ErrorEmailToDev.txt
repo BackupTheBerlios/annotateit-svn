@@ -29,7 +29,7 @@ Here is what we know:
 Host: [% ServerName %]
 Remote Server Admin: [% ServerAdmin %]
 Script URI: [% ScriptURI %]
-User: [% IF (User.FirstName && User.LastName) %][% User.FirstName %] [% User.LastName %][% ELSE %]Not Logged In[% END %]
+User: [% IF (User.FirstName && User.LastName) %][% User.FirstName %] [% User.LastName %] ([% User.Email %])[% ELSE %]Not Logged In[% END %]
 
 Error Message: 
 
