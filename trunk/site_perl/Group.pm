@@ -226,6 +226,9 @@ sub save {
   my ($self) = @_;
   $self->setType;
   my $sth = $self->{dbh}->prepare("INSERT INTO GroupDefs (GroupName, GroupID, OwnerID, ParentID, Type, State, Active) VALUES (?,?,?,?,?,?,?)");
+  
+   
+
   $sth->execute($self->getGroupName,
 		$self->getGroupID,
 		$self->getOwnerID,
@@ -233,6 +236,21 @@ sub save {
 		$self->getParentID,
 		"Open","Active");
   $self->setID($self->{dbh}->{mysql_insertid});
+  unless (defined $self->getGroupID and $self->getGroupID) {
+      my $gid = $g->getID;
+      my $groupId = "";
+      $groupName = $self->getGroupName;
+      unless (defined $groupName and $groupName) {
+	  warn "You must set the group name prior to saving: \n";
+	  warn "   " . join ": ", caller();
+	  die;
+      }
+      ($groupId = $groupName) =~ s/[^\w]/_/g;
+      $groupId .= "_$gid";
+      ($groupId = "No Name" . rand(10000)) if ($groupId =~ /^_\d+/);
+      $g->setGroupID($groupId);
+      $g->update;
+  }
 }
 
 sub getDisplayData {

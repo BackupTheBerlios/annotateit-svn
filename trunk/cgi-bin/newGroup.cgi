@@ -85,11 +85,11 @@ sub makeGroup {
   my $check = 0;
   if ($parentID) {
     my $group = Group->load( dbh => $dbh,
-			   GroupID => $parentID);
+			     GroupID => $parentID);
     if ( ($group->isOwner($user) and 
 	 $user->hasPrivilege("Own.AddChildGroup"))
-	or 
-	$user->hasPrivilege("Other.AddChildGroup")) {
+	 or 
+	 $user->hasPrivilege("Other.AddChildGroup")) {
       $check = 1;
     }
   } else {
@@ -97,16 +97,6 @@ sub makeGroup {
 	$user->hasPrivilege("Other.AddParentGroup")) {
       $check = 1;
     }
-  }
-  if ($check) {
-    $g->save;
-    my $gid = $g->getID;
-    my $groupId;
-    ($groupId = $groupName) =~ s/[^\w]/_/g;
-    $groupId .= "_$gid";
-    ($groupId = "No Name" . rand(10000)) unless $groupId;
-    $g->setGroupID($groupId);
-    $g->update;
   }
 
 }
