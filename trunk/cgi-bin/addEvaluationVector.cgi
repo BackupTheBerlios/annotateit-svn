@@ -32,14 +32,15 @@ use CGI;
 our $C = CGI->new;
 
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $authInfo, $scriptdir, $serverURL);
 $scriptdir = $config->param("server.scriptdirectory");
 $serverURL = $config->param("server.url");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $template = Template->new( RELATIVE => 1,
-			      INCLUDE_PATH => "../templates" );
+our $template = Template->new( RELATIVE => 1,
+			       INCLUDE_PATH => "../templates",
+			       ERROR => "Error.html");
 
 unless ($authInfo->{LoggedIn}) {
   my $vars = {scriptdir => $scriptdir,
@@ -50,9 +51,9 @@ unless ($authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars );
   exit;
 }
-my $user = User->load( dbh => $dbh,
-		       ID => $authInfo->{UserID});
-my $action = $C->param("action") || "";
+our $user = User->load( dbh => $dbh,
+			ID => $authInfo->{UserID});
+our $action = $C->param("action") || "";
 if ($action eq "") {
   &printNewForm;
 } elsif ($action eq "setValueNames") {
