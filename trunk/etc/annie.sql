@@ -18,14 +18,30 @@
 --   http://www.gnu.org/licenses/gpl.txt
 
 --
----- MySQL dump 9.07
+---- MySQL dump 8.23
 --
--- Host: localhost    Database: annie
+-- Host: localhost    Database: annotateit_com
 ---------------------------------------------------------
--- Server version	4.0.4-beta-log
+-- Server version	3.23.58
 
 --
--- Table structure for table 'Assignment'
+-- Table structure for table `AnnotationRequest`
+--
+
+DROP TABLE IF EXISTS AnnotationRequest;
+CREATE TABLE AnnotationRequest (
+  ID bigint(20) unsigned NOT NULL auto_increment,
+  RemoteAddress varchar(30) default NULL,
+  RequestURI varchar(255) default NULL,
+  RequestURIDirectory varchar(255) default NULL,
+  Timestamp timestamp(14) NOT NULL,
+  PRIMARY KEY  (ID)
+) TYPE=MyISAM;
+
+/*!40000 ALTER TABLE `AnnotationRequest` DISABLE KEYS */;
+
+--
+-- Table structure for table `Assignment`
 --
 
 DROP TABLE IF EXISTS Assignment;
@@ -41,20 +57,24 @@ CREATE TABLE Assignment (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Assignment` DISABLE KEYS */;
+
 --
--- Table structure for table 'Clickthrough'
+-- Table structure for table `Clickthrough`
 --
 
 DROP TABLE IF EXISTS Clickthrough;
 CREATE TABLE Clickthrough (
-  ID bigint(20) unsigned NOT NULL auto_increment,
+  ID int(10) unsigned NOT NULL auto_increment,
   UserID int(10) unsigned default NULL,
   AnnotationID int(10) unsigned default NULL,
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Clickthrough` DISABLE KEYS */;
+
 --
--- Table structure for table 'Comment'
+-- Table structure for table `Comment`
 --
 
 DROP TABLE IF EXISTS Comment;
@@ -67,8 +87,10 @@ CREATE TABLE Comment (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Comment` DISABLE KEYS */;
+
 --
--- Table structure for table 'CommunityAnnotation'
+-- Table structure for table `CommunityAnnotation`
 --
 
 DROP TABLE IF EXISTS CommunityAnnotation;
@@ -80,8 +102,10 @@ CREATE TABLE CommunityAnnotation (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `CommunityAnnotation` DISABLE KEYS */;
+
 --
--- Table structure for table 'CustomAnnotation'
+-- Table structure for table `CustomAnnotation`
 --
 
 DROP TABLE IF EXISTS CustomAnnotation;
@@ -93,8 +117,10 @@ CREATE TABLE CustomAnnotation (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `CustomAnnotation` DISABLE KEYS */;
+
 --
--- Table structure for table 'Document'
+-- Table structure for table `Document`
 --
 
 DROP TABLE IF EXISTS Document;
@@ -110,8 +136,10 @@ CREATE TABLE Document (
   PRIMARY KEY  (ObjectID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Document` DISABLE KEYS */;
+
 --
--- Table structure for table 'DocumentAccess'
+-- Table structure for table `DocumentAccess`
 --
 
 DROP TABLE IF EXISTS DocumentAccess;
@@ -121,8 +149,10 @@ CREATE TABLE DocumentAccess (
   PRIMARY KEY  (GroupID,DocumentID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `DocumentAccess` DISABLE KEYS */;
+
 --
--- Table structure for table 'EvalVectorDesc'
+-- Table structure for table `EvalVectorDesc`
 --
 
 DROP TABLE IF EXISTS EvalVectorDesc;
@@ -136,8 +166,10 @@ CREATE TABLE EvalVectorDesc (
   PRIMARY KEY  (ObjectID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `EvalVectorDesc` DISABLE KEYS */;
+
 --
--- Table structure for table 'EvalVectorValueNames'
+-- Table structure for table `EvalVectorValueNames`
 --
 
 DROP TABLE IF EXISTS EvalVectorValueNames;
@@ -148,24 +180,28 @@ CREATE TABLE EvalVectorValueNames (
   PRIMARY KEY  (EvalVectorID,Value)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `EvalVectorValueNames` DISABLE KEYS */;
+
 --
--- Table structure for table 'Evaluation'
+-- Table structure for table `Evaluation`
 --
 
 DROP TABLE IF EXISTS Evaluation;
 CREATE TABLE Evaluation (
   ObjectID bigint(20) unsigned NOT NULL default '0',
   EvalVectorID bigint(20) unsigned NOT NULL default '0',
-  Value int(11) NOT NULL default '0',
+  Value int(11) default NULL,
   OwnerID int(10) unsigned NOT NULL default '0',
   GroupID varchar(80) default NULL,
   ObjectClass varchar(40) NOT NULL default '',
-  Weight int(11) NOT NULL default '0',
-  PRIMARY KEY  (ObjectID,EvalVectorID,Value,OwnerID,Weight)
+  Weight int(11) default NULL,
+  PRIMARY KEY  (ObjectID,EvalVectorID,OwnerID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Evaluation` DISABLE KEYS */;
+
 --
--- Table structure for table 'Exclude'
+-- Table structure for table `Exclude`
 --
 
 DROP TABLE IF EXISTS Exclude;
@@ -176,25 +212,29 @@ CREATE TABLE Exclude (
   KEY URL (URL,OwnerEmail)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Exclude` DISABLE KEYS */;
+
 --
--- Table structure for table 'GroupDefs'
+-- Table structure for table `GroupDefs`
 --
 
 DROP TABLE IF EXISTS GroupDefs;
 CREATE TABLE GroupDefs (
   ID int(10) unsigned NOT NULL auto_increment,
   GroupName varchar(255) default NULL,
-  GroupID varchar(255) default NULL,
+  GroupID varchar(40) default NULL,
   OwnerID int(10) unsigned NOT NULL default '0',
   ParentID varchar(255) default NULL,
   Type varchar(20) default NULL,
   State varchar(8) default 'Open',
-  Active enum('Active','Inactive') NOT NULL default 'Active',
+  Active enum('Active','Inactive') default 'Active',
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `GroupDefs` DISABLE KEYS */;
+
 --
--- Table structure for table 'GroupMember'
+-- Table structure for table `GroupMember`
 --
 
 DROP TABLE IF EXISTS GroupMember;
@@ -205,8 +245,10 @@ CREATE TABLE GroupMember (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `GroupMember` DISABLE KEYS */;
+
 --
--- Table structure for table 'License'
+-- Table structure for table `License`
 --
 
 DROP TABLE IF EXISTS License;
@@ -217,8 +259,10 @@ CREATE TABLE License (
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `License` DISABLE KEYS */;
+
 --
--- Table structure for table 'ObjectDescription'
+-- Table structure for table `ObjectDescription`
 --
 
 DROP TABLE IF EXISTS ObjectDescription;
@@ -230,8 +274,10 @@ CREATE TABLE ObjectDescription (
   PRIMARY KEY  (ID,ObjectClass)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `ObjectDescription` DISABLE KEYS */;
+
 --
--- Table structure for table 'ObjectMap'
+-- Table structure for table `ObjectMap`
 --
 
 DROP TABLE IF EXISTS ObjectMap;
@@ -245,8 +291,10 @@ CREATE TABLE ObjectMap (
   PRIMARY KEY  (FromObjectID,ToObjectID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `ObjectMap` DISABLE KEYS */;
+
 --
--- Table structure for table 'Outbox'
+-- Table structure for table `Outbox`
 --
 
 DROP TABLE IF EXISTS Outbox;
@@ -256,19 +304,23 @@ CREATE TABLE Outbox (
   PRIMARY KEY  (DocumentID,UserID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Outbox` DISABLE KEYS */;
+
 --
--- Table structure for table 'Rubric'
+-- Table structure for table `Rubric`
 --
 
 DROP TABLE IF EXISTS Rubric;
 CREATE TABLE Rubric (
   ID bigint(20) unsigned NOT NULL default '0',
-  Type varchar(8) default NULL,
+  Type varchar(9) default NULL,
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `Rubric` DISABLE KEYS */;
+
 --
--- Table structure for table 'annotation'
+-- Table structure for table `annotation`
 --
 
 DROP TABLE IF EXISTS annotation;
@@ -285,14 +337,13 @@ CREATE TABLE annotation (
   GroupID varchar(40) default NULL,
   phrase text,
   Anonymous char(3) default 'No',
-  Font varchar(40) default NULL,
-  Color varchar(40) default NULL,
-  Style varchar(40) default NULL,
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
 
+/*!40000 ALTER TABLE `annotation` DISABLE KEYS */;
+
 --
--- Table structure for table 'user'
+-- Table structure for table `user`
 --
 
 DROP TABLE IF EXISTS user;
@@ -307,10 +358,12 @@ CREATE TABLE user (
   AccessKey varchar(255) default NULL,
   Status varchar(20) default 'Free',
   AutoReload char(3) default 'Yes',
-  NoteType varchar(20) default 'FulltextAfter',
+  NoteType varchar(20) default 'FulltextBefore',
   LastName varchar(40) default NULL,
   FirstName varchar(40) default NULL,
   School varchar(250) default NULL,
   PRIMARY KEY  (ID)
 ) TYPE=MyISAM;
+
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
