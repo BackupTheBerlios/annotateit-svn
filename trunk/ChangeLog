@@ -1,3 +1,15 @@
+2004-05-07 jnerad
+
+	- (Minor Bugfixes) Documentation, syntax errors, other issues that
+	have been piling up and that I just haven't committed for some
+	reason or another, I finally got to commit.  Looks like another
+	release is going to be due out soon.  I think that I'd like to get
+	some more of the web tests done, maybe say 10%, and then release.
+
+	
+	
+
+	
 2004-05-01 jnerad
 
 	- (Minor Bugfixes) Moved stuff around for easier svn commits
