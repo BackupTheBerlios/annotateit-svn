@@ -26,6 +26,8 @@
     Group: [% AnnotationGroupName %]<br />
     <p>On [% AnnotationTime %], [% IF AnnotationIsAnonymous %]Anonymous[% IF CanSeeAnonymousAuthors %] ([% AnnotationUserName %])[% END %][% ELSE %][% AnnotationUserName %][% END %] wrote:<br />
       [% AnnotationText %]</p>
+      <p>This was written about the following text:<br />
+      [% AnnotationPhrase %]</p>
     [% IF AnnotationCanEdit %]<p><a href="[% scriptdir %]editAnnotations.cgi?AnnotationID=[% AnnotationID %]">Edit</a> | <a href="[% scriptdir %]deleteAnnotations.cgi?AnnotationID=[% AnnotationID %]">Delete</a>[% END %]
       
     <hr />
