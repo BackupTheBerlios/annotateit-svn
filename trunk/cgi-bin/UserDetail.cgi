@@ -29,16 +29,16 @@ use User;
 use Data::Dumper;
 use CGI;
 our $C = CGI->new;
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $authInfo, $scriptdir, $serverurl);
 $scriptdir = $config->param("server.scriptdirectory");
-my $docDir = $config->param("server.documentdirectory");
+our $docDir = $config->param("server.documentdirectory");
 $serverurl = $config->param("server.url");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $action = $C->param("action") || "";
-my $ID = $C->param("ID") || "";
-my $template = Template->new( RELATIVE => 1,
+our $action = $C->param("action") || "";
+our $ID = $C->param("ID") || "";
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
 unless ($authInfo->{LoggedIn}) {
   my $vars = {scriptdir => $scriptdir,
@@ -49,7 +49,7 @@ unless ($authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars) or die $template->error;
   exit;
 }
-my $user = User->load(dbh => $dbh,
+our $user = User->load(dbh => $dbh,
 		      ID => $authInfo->{UserID});
 
 unless ($user->hasPrivilege("Other.EditUserInfo")) {
@@ -63,7 +63,7 @@ unless ($user->hasPrivilege("Other.EditUserInfo")) {
   exit;
 }
 
-my $vars = {};
+our $vars = {};
 
 if ($action eq "Edit" and $ID) {
   &edit();
@@ -134,7 +134,6 @@ sub display {
 }
 sub delete {
   my @unlink = ();
-  warn "ID: $ID";
   my $sth = $dbh->prepare("DELETE FROM Assignment WHERE UserID = ?");
   $sth->execute($ID);
   $sth = $dbh->prepare("DELETE FROM GroupMember WHERE MemberID = ?");
