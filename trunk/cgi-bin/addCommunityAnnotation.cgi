@@ -35,7 +35,7 @@ our $C = CGI->new;
 my $config = $AnnotateitConfig::C;
 our ($dbh, $authInfo, $scriptdir, $serverURL);
 $scriptdir = $config->{server}{scriptdirectory};
-$serverURL = $config->{server.url};
+$serverURL = $config->{server}{url};
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
 my $Title = &widgets::scrub($C->param("Title") || "");
