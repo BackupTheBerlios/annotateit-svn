@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 ##############################################
 ## This transfers the values of community annotations to a
 ## user's predefined annotations list.

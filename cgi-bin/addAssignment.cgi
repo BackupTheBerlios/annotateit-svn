@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # Copyright 2003, Buzzmaven Co.
 
 # deletes predefined annotations and redirects
@@ -35,9 +35,9 @@ use CGI;
 our $C = CGI->new;
 $ENV{TMPDIR} = "/tmp";
 my @chars = ('A'..'Z','a'..'z',0..9);
-my $config = Config::Simple->new("../etc/annie.conf");
-my $dbh = &widgets::dbConnect($config);
-my $authInfo = &auth::authenticated($dbh,\$C);
+our $config = Config::Simple->new("../etc/annie.conf");
+our $dbh = &widgets::dbConnect($config);
+our $authInfo = &auth::authenticated($dbh,\$C);
 my $scriptdir = $config->param("server.scriptdirectory");
 my $serverURL = $config->param("server.url");
 my $docURL = $config->param("server.documenturl");

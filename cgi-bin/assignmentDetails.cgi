@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # Copyright 2003, Buzzmaven
 # This file is part of Annotateit.
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # Rubric management
 # Copyright 2003, Buzzmaven Co.
 

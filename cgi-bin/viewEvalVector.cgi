@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # View an evaluation vector by ID
 
 # Copyright 2003, Buzzmaven Co.

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # deletes annotations to texts and redirects to appropriate page.
 # Copyright 2003, Buzzmaven Co.
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl -wT
 # This edits the text annotations, not the predefined annotations.
 # Copyright 2003, Buzzmaven Co.
 
