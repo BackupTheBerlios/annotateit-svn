@@ -32,7 +32,7 @@ use Data::Dumper;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($template,$dbh, $authInfo, $scriptdir) = ();
 $scriptdir = $config->param("server.scriptdirectory");
 $dbh = &widgets::dbConnect($config);
@@ -49,10 +49,10 @@ if (!$authInfo->{LoggedIn}) {
   exit;
 }
 
-my $action = $C->param("action");
-my $user = User->load(dbh => $dbh,
+our $action = $C->param("action");
+our $user = User->load(dbh => $dbh,
 		      ID => $authInfo->{UserID});
-my $vars = {};
+our $vars = {};
 $vars->{User} = $user->getDisplayData;
 $vars->{AvailableEvalVectors} = $user->getEvalVectorDisplayData();
 $vars->{Rubrics} = $user->getRubricDisplayData;
