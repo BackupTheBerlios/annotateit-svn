@@ -24,7 +24,7 @@ use Template;
 use MIME::Lite;
 use strict;
 use Data::Dumper;
-use lib (../site_perl);
+use lib qw(../site_perl);
 use AnnotateitConfig;
 my $config = $AnnotateitConfig::C;
 my $C = CGI->new();
