@@ -1,0 +1,29 @@
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<h2>What is this?</h2>
+<p>This is the screen that enables you to look at assignments that are pertinent to you.  &quot;Assignments&quot; are used by the system to keep track of what is due, when, and by whom.  Someone (a teacher, usually) will have made the assignments that you will see.  The select drop box below has a list of the groups that you belong to.  Rubrics, documents, and evaluation vectors can be associated with assignments. </p>
+
+<h2>What do I do with it?</h2>
+<p>  Choose the group whose assignments you wish to view and then press the &quot;Show Assignments&quot; button.</p>
+[% IF AddLink %]
+<p>To add a new assignment, select the &quot;add an assignment&quot; link below.</p>
+[% END %]

@@ -1,0 +1,80 @@
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<h2>What is this?</h2>
+
+<p>This is the form that you use to create a rubric.  A rubric is a
+collection of evaluation vectors (which you must have already made in
+order to create a collection of) that can be assigned to one or more
+assignments.</p>
+
+<h2>How do I?</h2>
+
+<p>On this screen, you'll find a blank for the name of the rubric.
+This is for you and the people who will be seeing the rubric.  You
+should probably use something that is meaningful and understandable to
+others as well.</p>
+
+<p>Next to each of your evaluation vectors, there is a checkbox.  Check each evaluation vector that you want to include on the rubric.</p>
+
+<p>You'll also find a select drop box for Rubric Type.  The rubric
+type determines how the overall evaluation score is calculated.  At
+the moment, AnnotateIt! only supports two types of evaluation scores.
+The first, &quot;Additive&quot;, adds together all the weighted scores
+for each of the evaluation vectors in the rubric.  The second, the
+&quot;Average Type&quot; assumes all your evaluation vectors will have
+the same range and average the weighted scores together.</p>
+
+<p>When calculating the scores for each of the evaluation vectors, the
+score you enter when you evaluate a document is weighted.  If you
+leave the box empty, each evaluation vector will count for the same as
+every other evaluation vector.  By increasing the value of the weight
+of an evaluation vector in a rubric, you can increase the importance
+of the evaluation vector in the calculation of the final calculation.
+A weight of zero will be converted to a weight of one whn an
+evaluation vector is selected. An example helps to illustrate.</p>
+
+<table>
+<tr>
+<th>Eval Vector</th>
+<th>Score</th>
+<th>Weight</th>
+<th>Weighted Score</th>
+</tr>
+<tr>
+<td>Grammar</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Audience Concern</td>
+<td align="center">5</td>
+<td align="center">10</td>
+<td align="center">50</td>
+</tr>
+</table>
+
+<p>In the example above, the &quot;Audience Concern&quot; evaluation
+vector is valued much more highly (ten times as much, actually) than
+is the &quot;Grammar&quot; evaluation vector.  This results in a final
+score of 53 for the Additive type, and 53/11 ~ 4.8.  As you can see,
+the weights are reflected in the final calculation.</p>

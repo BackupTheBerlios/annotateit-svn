@@ -1,0 +1,28 @@
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<h2>What is this?</h2>
+
+<p>This is the first screen in the system that allows you to manage &quot;Evaluation Vectors&quot;.  In math and physics, a vector is a direction and a magnitude.  This model can be used to describe how people evaluate documents.  There is both a direction (or quality) and a magnitude (the value associated with it).An evaluation vector is how an evaluator can quantify a quality in a document.  An evaluation vector can be a holistic score, or it could be a component quality of a document.</p>
+
+<h2>What do I do with it?</h2>
+
+<p>If you need to evaluate assignments, and want to use the system to do it, add an evaluation vector (click the link below).  If you have evaluation vectors already, and want to edit them, click on the evaluation vector name, below.  If you want to delete an evaluation vector, click on the delete link, below.</p>

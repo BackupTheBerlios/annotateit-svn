@@ -1,0 +1,106 @@
+[% Title = 'Assignments for You' %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>Assignments For You</h1>
+	[% IF User.AdaptiveHelp.Assignments %]
+	[% IF SuppressAssignments %]
+	[% INCLUDE AH_AssignmentChoosing %]
+	[% ELSE %]
+	[% INCLUDE AH_AssignmentDisplay %]
+	[% END %]
+	[% END %]
+    
+    [% IF AddLink %]<p>You can <a href="[% scriptdir %][% AddURL %]">add an assignment</a>, too.</p>[% END %]
+<p>You can <a href="[% scriptdir %]manageUserInfo.cgi">go to the main menu</a></p>
+	<p>Show assignments for: 
+    <form action="[% scriptdir %]displayAssignments.cgi">
+	<input type="hidden" name="action" value="show_group" />
+    <select name="GroupID">
+    <option value="">All</option>
+    [% FOREACH GroupsWithAssignments %]
+    <option value="[% GroupID %]">[% GroupName %]</option>
+    [% END %]
+    </select>
+    <input type="submit" name="submit" value="Show Assignments" />
+    </form></p>
+[% UNLESS SuppressAssignments %]
+    <p>Click to view.</p>
+    <table>
+	<tr>
+	  [% IF EditLink %]<td><strong>Action</strong></td>[% END %]
+	  <td><strong>Due Date</strong></td>
+	  <td><strong>Title</strong></td>
+	  <td><strong>For Group</strong></td>
+	  <td><strong>Owner</strong></td>[% IF DeleteLink %]
+	  <td><strong>Delete</strong></td>
+	</tr>
+	[% FOREACH Assignments %]
+    <tr>
+      [% IF EditLink %]<td align="center"><a href="[% scriptdir %][% EditURL %]?ID=[% ID %]">Edit</a> | <a href="[% scriptdir %][% CloneURL %]?ID=[% ID %]">Clone</a></td>[% END %]
+      <td>[% DueDate %]</td>
+      <td>[% IF DetailsLink %]<a href="[% scriptdir %][% DetailURL %]?ID=[% ID %]">[% END %][% Title %][% IF DetailsLink %]</a>[% END %]</td>
+      <td>[% GroupName %]</td>
+      <td>[% UserName %]</td>[% IF DeleteLink %]
+      <td align="center"><a href="[% scriptdir %][% DeleteURL %]?action=delete;ID=[% ID %]">X</a>&nbsp;</td>[% END %]
+
+    </tr>
+    [% END %]
+    </table>
+    <table>
+
+    [% FOREACH Year = Calendar %]
+	  [% FOREACH Month = Year.Months %]
+      <tr>
+	  <td>
+	    <table border="1">
+		<tr>
+		  <td align="left"><a href="[% scriptdir %]displayAssignments.cgi?mAdj=[% mAdj - 1 %];action=show_group;GroupID=[% GroupID %]">Previous<br />Month</a></td>
+		  <td align="center" colspan="5"><span style="font-size: larger; font-weight: bold">[% Month.Label %] [% Year.Label %]</span></td>
+		  <td align="right"><a href="[% scriptdir %]displayAssignments.cgi?mAdj=[% mAdj + 1 %];action=show_group;GroupID=[% GroupID %]">Next<br />Month</a></td>
+		</tr>
+		<tr>
+		  <th>Sun</th>
+		  <th>Mon</th>
+		  <th>Tue</th>
+		  <th>Wed</th>
+		  <th>Thu</th>
+		  <th>Fri</th>
+		  <th>Sat</th>
+		</tr>
+	           [% FOREACH Week = Month.Weeks %]
+	        <tr>
+	           [% FOREACH Day = Week %]
+	          <td valign="top" align="right">[% Day.DayNumber %][% IF Day.HasAssignments %]<br />
+	              [% FOREACH Day.Assignment %]
+	              <a href="[% scriptdir %]assignmentDetails.cgi?ID=[% ID %]">[% Title %]</a><br />[% END %][% ELSE %]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% END %]</td>[% END %]
+                </tr>[% END %]
+            </table>
+          </td>
+    [% END %]</tr>
+    [% END %]
+    </table>
+[% END %]
+[% END %]
+[% INCLUDE Footer %]
+  </body>
+</html>

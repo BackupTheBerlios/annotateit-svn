@@ -1,0 +1,118 @@
+#!/usr/local/bin/perl -w
+# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt
+use strict;
+use Config::Simple qw(-strict);
+use lib "../site_perl";
+use widgets;
+use Test::More qw(no_plan);
+use User;
+my $config = Config::Simple->new("../etc/test.conf");
+my $dbh = &widgets::dbConnect($config);
+my $user = $config->param('database.user');
+my $password = $config->param('database.password');
+my $database = $config->param('database.name');
+`mysql -u $user -p$password $database < sql/annotation.sql`;
+`mysql -u $user -p$password $database < sql/testUser.sql`;
+`mysql -u $user -p$password $database < sql/GroupDefs.sql`;
+`mysql -u $user -p$password $database < sql/GroupMember.sql`;
+`mysql -u $user -p$password $database < sql/Clickthrough.sql`;
+`mysql -u $user -p$password $database < sql/Comment.sql`;
+$user = User->load(ID => 1,
+		   dbh => $dbh);
+my @methods = qw( load save delete new getPhrase getURL getAnnotation
+		  getTitle getUserID getContext getType getGroupID getID
+		  getTime setPhrase setURL setAnnotation setTitle setUserID
+		  setContext setType setGroupID setID setTime update 
+		  getDisplayData getCommentsDisplayData clean getAnonymous
+		  setAnonymous getTime setTime );
+
+BEGIN { use_ok( 'Annotation' ); }
+require_ok('Annotation');
+my $annotation = Annotation->new( dbh => $dbh );
+isa_ok($annotation, 'Annotation');
+can_ok($annotation, @methods);
+$annotation->setPhrase("Phrase");
+$annotation->setURL("http://www.yahoo.com");
+$annotation->setAnnotation("Annotation");
+$annotation->setTitle("Title");
+$annotation->setUserID("1");
+$annotation->setContext("Context");
+$annotation->setType("Public");
+$annotation->setGroupID("1");
+$annotation->setAnonymous("No");
+$annotation->setPhraseRE('PhraseRE');
+$annotation->save;
+my $id = $annotation->getID;
+ok($id, 'Returned a valid ID');
+my $a2 = Annotation->load( dbh => $dbh,
+			    ID => $id);
+$annotation->setTime($a2->getTime);
+is_deeply($annotation,$a2,'Data Structures are the Same from save/load');
+
+$annotation->setTitle("New Title");
+$annotation->update;
+
+$a2 = "";
+$a2 = Annotation->load( dbh => $dbh,
+			ID => $id);
+
+is($a2->getTitle, "New Title", "Update");
+use Data::Dumper;
+my $dd = $a2->getDisplayData({CurrentUser => $user});
+delete($dd->{AnnotationTime});
+my $check = {'AnnotationComments' => [],
+	     'AnnotationText' => 'Annotation',
+	     'AnnotationUserName' => undef,
+	     'AnnotationUserID' => '1',
+	     'AnnotationID' => $id,
+	     'AnnotationGroupID' => '1',
+	     'AnnotationURL' => 'http://www.yahoo.com',
+	     'AnnotationTitle' => 'New Title',
+	     'AnnotationType' => 'Public',
+	     'AnnotationPhraseRE' => 'PhraseRE',
+	     'has_clickthroughs' => '0',
+	     'AnnotationContext' => 'Context',
+	     'AnnotationPhrase' => 'Phrase',
+	     'AnnotationIsAnonymous' => '0',
+	     'AnnotationGroupName' => 'Public',
+	     'AnnotationCanEdit' => '1',
+	     'AnnotationAnonymous' => 'No',
+	     'AnnotationUserName' => 'Jack Nerad'
+	    };
+
+is_deeply($dd,$check, "Get Display Data");
+$a2->delete;
+$a2 = "";
+$a2 = Annotation->load( dbh => $dbh,
+			ID => $id );
+is($a2->getTitle,"","Delete");
+
+# try setting a bad URL;
+eval {
+  $a2->setURL('URL');
+  $a2->save();
+};
+if ($@) {
+  my $error = $@;
+  ok(1,'saving dies when a bad URL is specified');
+  diag ("Error here is okay:\n $error");
+
+}

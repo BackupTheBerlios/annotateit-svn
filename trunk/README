@@ -1,0 +1,108 @@
+PURPOSE
+
+<begin marketroid talk>Welcome to the wonderful world of Annotateit.
+A writing instructor and graduate student of composition and rhetoric
+conceived this software.  He designed it and built it.  It is our hope
+that you will benefit from this powerful and flexible system.</end
+marketroid talk>
+
+LICENSING:
+
+Copyright Buzzmaven Co. 2003
+
+This file serves as the README for Annotateit.
+
+Annotateit is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+
+Annotateit is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with Annotateit; if not, write to the Free Software Foundation,
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+REQUIREMENTS:
+
+You will need the following to use Annotateit on your own server:
+
+* A *nix variant (Linux will do nicely)
+* The Apache webserver (http://www.apache.org)
+* The Perl Programming Language (http://perl.com)
+* Several Perl Modules available from cpan (http://search.cpan.org)
+	* Data::Dumper
+	* DBD::mysql
+	* DBI
+	* Template
+	* Config::Simple
+	* Date::Calc
+	* IO::File
+	* CGI
+	* MIME::Lite
+	* IO::Handle
+	* URI
+	* Time::HiRes 
+	* Benchmark
+	* Calendar::Simple
+	* Net::DNS
+	* LWP::UserAgent
+	* HTTP::Request::Common
+	* Digest::MD5
+	* File::Basename
+	* HTML::Parser
+	* Class::Accessor
+	* Class::Fields
+	* HTML::Scrubber
+	* HTML::TokeParser::Simple
+* GNU unrtf (http://www.gnu.org/software/unrtf/unrtf.html)
+* wvWare (http://wvware.sourceforge.net)
+* The MySQL database server (http://www.mysql.com)
+* The ability to edit your web server configuration file
+* The ability to edit text documents on the server.
+
+
+SUPPORT
+
+There is some support available.  Of course, Buzzmaven Co will provide
+everything you need to run your own Annotateit server.  Also, you may
+find some help by using the annotateit-users email list:
+
+http://www.buzzmaven.com/mailman/listinfo.cgi/annotateit-users
+
+Please search the archives before posting.
+
+It is possible if you are experiencing a problem, that there is a bug
+filed for it already at
+
+http://bugzilla.buzzmaven.com
+
+Please search for a bug before submitting a new bug report.
+
+
+CONTRIBUTIONS
+
+Contributions in any form are welcome.  Annotateit needs
+documentation, perl programmers, graphic designers, HTML gurus (who
+can pick up a simple templating language).
+
+If you want to contribute, please join the annotateit-dev email list:
+
+http://www.buzzmaven.com/mailman/listinfo.cgi/annotateit-dev
+
+INSTALLATION
+
+See the INSTALL file in this directory
+
+UPGRADING
+
+See the UPGRADING file in this directory
+
+
+
+
+
+

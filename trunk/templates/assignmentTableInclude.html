@@ -1,0 +1,46 @@
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+
+     [% IF loop.first %]
+    <hr />
+    [% WhichGroup %]:<br />
+    <table>
+	<tr>
+	  [% IF CanEditAssignment %]<td><strong>Edit</strong></td>[% END %]
+	  <td>Title</td>
+	  <td>Due Date</td>
+          [% IF CanDeleteAssignment %]<td><strong>Delete</strong></td>
+    <td><strong>Undelete</strong></td>[% END %]
+	</tr>
+    [% END %]
+    [% IF (CanViewDeletedAssignments && Deleted) || (!Deleted) %]
+    <tr>
+      <td align="center">[% IF CanEditAssignment %]<a href="[% scriptdir %]editAssignment.cgi?ID=[% ID %]">X</a></td>[% END %]
+      <td>[% IF CanSeeAssignmentDetails %]<a href="[% scriptdir %]assignmentDetails.cgi?ID=[% ID %]">[% END %][% Title %][% IF CanSeeAssignmentDetails %]</a>[% END %]</td>
+      <td>[% DueDate %]</td>
+      [% IF CanDeleteAssignment %]<td align="center">[% UNLESS Deleted %]<a href="[% scriptdir %]deleteAssignment.cgi?ID=[% ID %];action=delete">X</a>[% END %]&nbsp;</td>
+      <td align="center">[% IF Deleted %]<a href="[% scriptdir %]deleteAssignment.cgi?ID=[% ID %];action=undelete">X</a>[% END %]&nbsp;</td>[% END %]
+    </tr>
+    [% END %]
+    [% IF loop.last %]
+    </table>
+    [% END %]

@@ -1,0 +1,86 @@
+[%- IF (a == '') -%]
+[% Title = 'Invite People to Join' _ Group.GroupName %]
+[%- ELSIF (a == 'i') -%]
+[% Title = 'Message Sent' %]
+[%- ELSIF (a == 's') -%]
+[% Title = 'Welcome to ' _ Group.GroupName _'!' %]
+[%- END -%][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+
+[% IF (a == '') %]
+  <h1>Invite People to Join [% Group.GroupName %]</h1>
+  <p>In the box, put the list of email addresses of users registered on this system.  You should use commas to separate email addresses, for example: john@doe.com, barb@wire.com, jim@my.com.  If the users are not registered on this system, you will be told so, and messages will not be sent to those users.  We do this to ensure that we do not spam people.</p>
+  <form action="[% scriptdir %]pleaseJoin.cgi">
+    <input type="hidden" name="a" value="i" />
+    <input type="hidden" name="GID" value="[% Group.GroupID %]" />
+    <textarea name="EmailAddresses" rows="5" cols="50" wrap="virtual"></textarea>
+    <br />
+    <input type="submit" name="submit" value="Invite these folks" />
+  </form>
+[% ELSIF (a == 'i') %]
+  <h1>Messages Sent</h1>
+  <p>The following message was sent:
+
+  <pre>
+Hi.  It's me, [% User.FirstName %] [% User.LastName %].  I'm inviting
+you to join the [% Group.GroupName %] on AnnotateIt.com.  You can join
+by clicking on the following link:
+
+[% serverurl %][% scriptdir %]pleaseJoin.cgi?GID=[% Group.GroupID %];a=s
+
+Thanks.
+  </pre>
+
+It was sent to the following email addresses:
+  <ul>
+    [% FOREACH Success %]
+      <li><a href="mailto:[% Address %]">[% Address %]</a></li>
+    [% END %]
+  </ul>
+
+  [% IF Failure.size %]
+    It was <strong>not</strong> sent to the following email addresses:
+    <ul>
+      [% FOREACH Failure %]
+        <li><a href="mailto:[% Address %]">[% Address %]</a></li>
+      [% END %]
+    </ul>
+  [% END %]
+[% ELSIF (a == 's') %]
+  [% IF success %]
+    <h1>Welcome to [% Group.GroupName %]!</h1>
+    (To <a href="[% scriptdir %]manageUserInfo.cgi">Main Menu</a>)<br />
+    (To <a href="[% scriptdir %]manageGroups.cgi">Groups Menu</a>)<br />
+
+    <p>You have been added to list of users with access to [% Group.GroupName %] resources. If you have any questions about the nature of this group, please contact <a href="mailto:[% Group.OwnerEmail %]">[% Group.OwnerName %]</a></p>
+  [% ELSE %]
+    [% IF (error == 'GroupClosed') %]
+      <h1>Group is Closed</h1>
+      <p>Sorry, but somehow the group was closed to joining between the sending of the email and your response to the email.  That means the owner has to open it up again to allow you to join.</p>
+    [% ELSIF (error == 'NotPrivileged') %]
+      <h1>Not Privileged</h1>
+      <p>Sorry, but you don't have privileges to join this group.  You probably need to buy a license.</p>
+    [% END %]
+  [% END %]
+[% END %]
+[% INCLUDE Footer %]

@@ -1,0 +1,113 @@
+[% Title = EnglishAction _ ' User for Annotating Documents' %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+
+  <body>
+    <h1>[% EnglishAction %] User for Annotating Documents</h1>
+	[% IF editUserInfo %]
+    <p>To <a href="[% scriptdir %]manageUserInfo.cgi">manage info</a></p>
+	[% END %]
+    <p>[% error %]</p>
+    [% IF Updated == 1 %]
+    <p>The changes you requested have been made.</p>
+    [% ELSE %]
+    [% IF Updated == 0 %]
+    <p>No changes detected</p>
+    [% END %]
+    <form action="[% scriptdir %][% formAction %]" method="post">
+      [% IF location %]
+      <input type="hidden" name="location" value="[% location %]" />
+      [% END %]
+      [% IF url %]
+      <input type="hidden" name="url" value="[% url %]" />
+      [% END %]
+	<table width="600">
+	  <tr>
+  
+         <td colspan="2"><p>Instructions: Fill out the form below to
+         gain access to the AnnotateIt! system.  Your password will be
+         emailed to you by the system immediately.    Depending on how
+         busy the email servers are, it may take up to a day for you
+         to receive your password.  If you have not received the
+         password after 24 hours, please send an email to <a
+         href="mailto:support@buzzmaven.com">support@buzzmaven.com</a>
+         stating the email address you registered. Once you log on
+         using the password, you can change your password by viewing
+         your preferences.</p>
+	<p><strong>NOTE: If you use
+         a disposable or bogus email address, make sure you can remember your
+         password.  We will not send a password to an address other
+         than that which is registered.</strong></p>
+	<p><strong>NOTE: We do not send any email to you except your password (although, annotation and comment notification may be available at some point, it will be off by default).  We do not rent or sell email addresses, nor do we make them available for free.  We keep your email address private. We do not spam.  We think people who do are the scum of the earth.</strong></p>
+	<p><strong>If you require &quot;Teacher&quot; access to the system, please register first, then <a href="mailto:support@buzzmaven.com">email buzzmaven support</a>.</strong></p></td>
+         </tr>
+	    <tr>
+	      <td>Your Email Address</td>
+	      <td><input type="text" name="email" value="[% Email %]" /></td>
+	    </tr>
+	    <tr>
+	      <td>Your First Name</td>
+	      <td><input type="text" name="FirstName" value="[% FirstName %]"/></td>
+	    </tr>
+	    <tr>
+              <td>Your Last Name</td>
+	      <td><input type="text" name="LastName" value="[% LastName %]"/></td>
+	    </tr>
+	   [% IF editUserInfo %]
+	    <tr>
+	      <td>Your Password <br />(only for changes)</td>
+	      <td><input type="password" name="password1" value="[% password1 %]" /></td>
+	    </tr>
+	    <tr>
+	      <td>Your Password (for verification)<br />(only for changes)</td>
+	    <td><input type="password" name="password2" value="[% password2 %]" /></td>
+	  </tr>
+	  [% END %]
+          [% IF AutoReload == 'No' || AutoReload == 'Yes' %]
+          <tr>
+	    <td>Automatically reload<br />after annotation.</td>
+	    <td><select name="AutoReload">[% FOREACH val = ['Yes','No'] %]<option value="[% val %]" [% IF AutoReload == val %]selected="selected"[% END %] >[% val %]</option>[% END %]</td>
+	  </tr>
+          [% END %]
+	  <tr>
+	    <td>Annotation Type</td>
+	    <td><select name="NoteType">
+		<option value="Popup" [% IF NoteType == 'Popup' %]selected="selected"[% END %]>Popup</option>
+		<option value="FulltextBefore" [% IF NoteType == 'FulltextBefore' %]selected="selected"[% END %]>Inline Before Phrase</option>
+		<option value="FulltextAfter" [% IF NoteType == 'FulltextAfter' %]selected="selected"[% END %]>Inline After Phrase</option>
+	       </select>
+            </td>
+          </tr>
+	  <tr>
+	    <td>Your College or University</td>
+	    <td><input type="text" name="School" value="[% School %]" /></td>
+          </tr>
+	  <tr>
+	    <td colspan="2" align="center"><input type="submit" name="action" value="Save My Info" /></td>
+	  </tr>
+      </table>
+    </form>
+    [% END %]
+    <hr>
+[% INCLUDE Footer %]
+  </body>
+</html>

@@ -1,0 +1,137 @@
+#!/usr/local/bin/perl -w
+# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt
+use strict;
+use Config::Simple qw(-strict);
+use lib "../site_perl";
+use widgets;
+use Test::More qw(no_plan);
+use EvalVector;
+use Data::Dumper;
+use User;
+my $config = Config::Simple->new("../etc/test.conf");
+my $dbh = &widgets::dbConnect($config);
+my $user = $config->param('database.user');
+my $password = $config->param('database.password');
+my $database = $config->param('database.name');
+`mysql -u $user -p$password $database < sql/ObjectDescription.sql`;
+`mysql -u $user -p$password $database < sql/ObjectMap.sql`;
+
+`mysql -u $user -p$password $database < sql/EvalVectorDesc.sql`;
+`mysql -u $user -p$password $database < sql/EvalVectorValueNames.sql`;
+`mysql -u $user -p$password $database < sql/testUser.sql`;
+`mysql -u $user -p$password $database < sql/EvalVectorDocumentMap.sql`;
+
+my @methods = qw( load save delete new ID MaximumValue MinimumValue
+		  Increment Title Type ObjectClass
+		  mapTo
+		  getDisplayData );
+
+BEGIN { use_ok( 'EvalVector' ); }
+require_ok('EvalVector');
+my $ev = EvalVector->new( dbh => $dbh );
+isa_ok($ev, 'EvalVector');
+isa_ok($ev, 'Object');
+can_ok($ev, @methods);
+$ev->MaximumValue("5");
+$ev->MinimumValue("1");
+$ev->Increment("1");
+$ev->OwnerID(1);
+$ev->Title("Test Vector");
+$ev->Type("Radio");
+$ev->setValueName(1,"Poor");
+$ev->setValueName(2,"Needs Improvement");
+$ev->setValueName(3,"Average");
+$ev->setValueName(4,"Better than Average");
+$ev->setValueName(5,"Top Notch");
+$ev->save;
+my $id = $ev->ID;
+ok($id, 'Returned a valid ID');
+my $a2 = EvalVector->load( dbh => $dbh,
+			   ID => $id);
+is_deeply($ev,$a2,'Data Structures are the Same from save/load');
+# checking setting of value names;
+
+my $check = { ID => 1,
+	      OwnerName => 'Jack Nerad',
+	      Increment => 1,
+	      Type => 'Radio',
+	      MaximumValue => 5,
+	      Title => 'Test Vector',
+	      MinimumValue => 1,
+	      Rubric => [
+                        {
+                          'Value' => 1,
+                          'Name' => 'Poor'
+                        },
+                        {
+                          'Value' => 2,
+                          'Name' => 'Needs Improvement'
+                        },
+                        {
+                          'Value' => 3,
+                          'Name' => 'Average'
+                        },
+                        {
+                          'Value' => 4,
+                          'Name' => 'Better than Average'
+                        },
+                        {
+                          'Value' => 5,
+                          'Name' => 'Top Notch'
+                        }
+                      ],
+	      Table => [
+			{ Value => 1,
+			  Name => 'Poor'},
+			{ Value => 2,
+			  Name => 'Needs Improvement' },
+			{ Value => 3,
+			  Name => 'Average' },
+			{ Value => 4,
+			  Name => 'Better than Average' },
+			{ Value => 5,
+			  Name => 'Top Notch' }
+		       ] };
+is_deeply($a2->getDisplayData,$check,"Display Data is okay");
+
+my $tUser = User->load(dbh => $dbh,
+		      ID => 1);
+my $doc = bless {ID => 2}, "Document";
+ 
+$ev->mapTo( Object => $doc );
+my $sth = $dbh->prepare("SELECT FromObjectID, FromObjectClass, ToObjectID, ToObjectClass FROM ObjectMap WHERE FromObjectID = ? and ToObjectClass = 'Document'");
+$sth->execute($ev->ID);
+my @row = $sth->fetchrow_array;
+my @check = (1,'EvalVector','2','Document');
+ok(eq_array(\@check,\@row), "Document Map saves okay");
+
+my $a = bless { ID => 3 }, 'Assignment';
+
+$ev->mapTo( Object => $a );
+$sth = $dbh->prepare("SELECT FromObjectID, FromObjectClass, ToObjectID, ToObjectClass FROM ObjectMap WHERE FromObjectID = ? and ToObjectClass = 'Assignment'");
+$sth->execute($ev->ID);
+@row = $sth->fetchrow_array;
+@check = (1,'EvalVector','3','Assignment');
+ok(eq_array(\@check,\@row), "Assignment Map saves okay");
+
+
+
+

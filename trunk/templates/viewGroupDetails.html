@@ -1,0 +1,136 @@
+[% Title = "Group Details" %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>[% Group.GroupName %] ([% Group.Type %])</h1>
+    [% IF Group.UserIsOwner %]
+     <a href="[% scriptdir %]pleaseJoin.cgi?GID=[% Group.GroupID %]">Invite people to join your group</a>
+    [% END %]
+    [% IF CanCloseGroup %]<p>Group is <strong>[% Group.State %]</strong> to new members. 
+    [% IF Group.State == 'Open' %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Closed;GroupID=[% Group.GroupID %]">Close</a>)[% ELSE %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Open;GroupID=[% Group.GroupID %]">Open</a>)[% END %]</p>
+   <p>Group is <strong>[% Group.Active %]</strong>. (<a href="[% serverurl %][% scriptdir %][% formAction %]?GroupID=[% Group.GroupID %];action=[% IF Group.Active == 'Active' %]Deactivate">Deactivate[% ELSE %]Activate">Activate[% END %]</a>)</p>
+[% END %]
+    
+    <p>Group Members:</p>
+    [% IF PrintAddFormElements %]
+    <form action="[% scriptdir %][% formAction %]" method="post">
+      <input type="hidden" name="action" value="AddGroupMembers" />
+      <input type="hidden" name="GroupID" value="[% Group.GroupID %]" />
+      [% END %]
+      [% IF Group.Class == "Parent" %]
+      <p>[% FOREACH gm = GroupMembers -%]
+	[% IF Group.numChildGroups > 0 and PrintAddFormElements %]
+	<input type="checkbox" name="NewUserID" value="[% gm.ID %]" />
+	[% END %][% gm.Name %] [% IF CanDeleteUsersFromGroup %](<a href="[%scriptdir %][% DeleteGroupMemberURL %];GroupID=[% Group.GroupID %];UserID=[% gm.ID %]">Remove from Group</a>)[% END %]<br />
+	   &nbsp;&nbsp;&nbsp;Member of: [%- FOREACH gm.Groups.MemberedGroups -%][%- IF loop.first -%][%- ELSE -%], [%- END -%]
+	                                  [%- UNLESS GroupID == Group.GroupID -%]<a href="[% scriptdir %][% ViewDetailsURL %]?GroupID=[% GroupID %]">
+	                                  [%- END -%][%- GroupName -%][%- UNLESS GroupID == Group.GroupID -%]</a>[%- END -%]
+	                                [%- END -%]<br />
+        [% END %]
+	[% ELSE %]
+	<a href="[% scriptdir %][% FromLocation %]?GroupID=[% Group.ParentID %]">Back</a><br />
+    <p>[% FOREACH gm = GroupMembers -%]
+      [% IF Group.numChildGroups > 0 %]<input type="checkbox" name="NewUserID" value="[% gm.ID %]" />[% END %][% gm.Name %] [% IF CanDeleteUsersFromGroup %](<a href="[%scriptdir %][% DeleteGroupMemberURL %];GroupID=[% Group.GroupID %];UserID=[% gm.ID %]">Remove from Group</a>)[% END %]<br />
+	[% END %]
+      [% END %]
+	
+    [% IF CanViewChildGroups %][% FOREACH Group.ChildGroups %][% IF loop.first %]
+      <hr /><p>Child Groups (click to view)</p>
+      <table>
+	  <tr>
+	    <th>&nbsp;</th>
+	    <th>Group Name</th>
+	    <th>Group Type</th>
+	    <th>Delete</th>
+	  </tr>[% END %]
+      <tr>
+	<td>[% IF PrintAddFormElements %]<input type="checkbox" name="NewGroupID" value="[% GroupID %]" />[% END %]&nbsp;</td>
+	<td><a href="[% scriptdir %]viewGroupDetails.cgi?GroupID=[% GroupID %]">[% GroupName %]</a></td>
+	<td>[% Type %]</td>
+	<td align="center"><a href="[% scriptdir %]deleteGroup.cgi?GroupID=[% GroupID %];FromLocation=[% FromLocation %]">X</a></td>
+	</tr>[% IF loop.last %]
+      <tr>
+	<td colspan="3" align="center">[% IF PrintAddFormElements %]<input type="submit" name="submit" value="Add Selected Users to Selected Child Groups" />[% END %]</td>
+      </tr>
+    </table>[% END %]
+    [% END %][% END %]</form>
+
+    [% IF Group.Class == 'Parent' and User.Privileges.Own.AddChildGroup %]
+      <hr />
+    <form action="[% scriptdir %][% AddChildURL %]" method="post" >
+      <input type="hidden" name="ParentID" value="[% Group.GroupID %]" />
+      <input type="hidden" name="FromLocation" value="[% FromLocation %]" />
+      <input type="text" name="GroupName" value="" /><br />
+      <input type="submit" name="submit" value="Add Child Group" />
+    </form>
+      [% END %]
+
+    [% IF CanAddAssignments %]
+	<hr />
+	<h2>Evaluations for this group</h2>
+	<table>
+	 <tr>
+	  <th>Name (Current Grade)</th>
+	  [% FOREACH ThisGroupsAssignments %]
+	   <th>[% Title %]<br /> ([% DueDate %])</th>
+	  [% END %]
+         </tr>
+	  [% FOREACH UserEvals %]
+	 <tr>
+	   <td>[% Name %] ([% FinalEvalWeighted %])</td>
+	   [% FOREACH Assignment  %]
+	    <td align="center">[% IF DocEvals.size > 1 %]
+	        <table>
+	          [% FOREACH DocEvals %]
+	           <tr><td>[% Title %]</td><td align="center">[% Eval %]</td></tr>
+		  [% END %]
+                </table>
+		[% ELSE %][% FOREACH DocEvals %][% Eval %][% END %][% END %]</td>
+           [% END %]
+         </tr>
+          [% END %]
+        </table>
+    [% END %]
+         
+    [% FOREACH AnnotatedURLs %]
+    [% IF loop.first %]
+    <hr />
+    URLs Annotated by this group:<br />
+    [% END %]
+    <a href="[% ServerURL %][% scriptdir %][% ProxyLink %]/[% AnnotationURL %]">[% AnnotationURL %]</a><br />
+    [% END %]
+    [% SET WhichGroup = "Assignments for this group's parent Group" %]
+    [% FOREACH ParentGroupsAssignments %]
+    [% INCLUDE assignmentTableInclude.html %]
+    [% END %]
+    [% SET WhichGroup = "Assignments for this group" %]
+    [% FOREACH ThisGroupsAssignments %]
+    [% INCLUDE assignmentTableInclude.html %]
+    [% END %]
+    <hr />
+    [% IF CanAddAssignments %]
+    <p>You can <a href="[% scriptdir %]addAssignment.cgi?GroupID=[% Group.GroupID %]">add an assignment</a> to this group.</p>
+    <hr />
+    [% END %]
+[% INCLUDE Footer %]
+  </body>
+</html>
