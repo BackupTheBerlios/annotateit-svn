@@ -53,5 +53,5 @@ my $message = MIME::Lite->new( To => 'bugzilla-daemon@buzzmaven.com',
 			       Type => 'TEXT',
 			       Data => $messageText );
 $message->send;
-warn $message->as_string;
+warn "Error trapping occurred\n";
 exit;
