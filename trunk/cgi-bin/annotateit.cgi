@@ -55,16 +55,13 @@ our $vars = { scriptdir => $scriptdir,
 	     imagesdir => $images_dir};
 
 our $selfURL = $C->url;
-
 # check to see if we need to redirect.  We get our information from the
 # path info for the script, so it is important to do it right.
 
 &checkAction();
-
 # get the URL whose annotation we are requesting.
 
 our $requestURI = &getRequestURI();
-
 
 our $request_method = lc($C->request_method);
 
@@ -73,16 +70,21 @@ our $http_response = &getResponse($requestURI->clone(),
 				 $vars_passed,
 				 $request_method);
 # change the links
+
+
 our $content = &insertLinks({content => $http_response->content,
 			    selfURL => $selfURL,
 			    requestURL => $requestURI->clone});
 
 my ($bodyStart,$bodyEnd) = &getBodyOffset($content);
+
 $content = &makeRawContent($content);
 
 $content = &insertAnnotationHolders($content);
+
 &printContent($content,$http_response);
 
+exit;
 sub printContent {
   my ($content,$http_response) = @_;
 #  my $io = IO::Handle->new();
@@ -92,49 +94,53 @@ sub printContent {
   my $header_key = "";
   my %header_args = ();
   for my $key (keys %{$headers}) {
-      if ($key =~ /^x/i) {
-	  $xheaders{ucfirst($key)} = $headers->{$key};
-      } else {
-	  my $old_key = $key;
-	  $key =~ s/-/_/g;
-	  $header_key = lc("-$key");
-	  $header_args{$header_key} = $headers->{$old_key};
-      }
-      
+    if ($key =~ /^x/i) {
+      $xheaders{ucfirst($key)} = $headers->{$key};
+    } else {
+      my $old_key = $key;
+      $key =~ s/-/_/g;
+      $header_key = lc("-$key");
+      $header_args{$header_key} = $headers->{$old_key};
+    }
   }
   $header_args{'-content_length'} = length($content);
   $header_args{'-type'} ||= "text/html";
   $header_args{'-expires'} = "-1d"; # so we make sure
-                                         # not to cache anything
+  # not to cache anything
   
   # I have no idea why under mod perl, I can't print the headers to the log.
-  # but that is really super aggravating.
-
+  # That is really super aggravating when debugging.
+  
   print $C->header(%header_args);
   print $content;
-
+  
   exit;
 }
 
 
 sub insertAnnotationHolders {
+  my $con = shift;
   my $userID = $authInfo->{UserID} if (ref $authInfo eq "HASH");
   $userID ||= "";
-  my $user;
+  my $user = "";
   if ($userID) {
-      $user = User->load( dbh => $dbh,
-			  ID => $userID );
+    $user = User->load( dbh => $dbh,
+			ID => $userID );
   } else {
-      $user = User->new(dbh => $dbh);
+    $user = User->new(dbh => $dbh);
   }
+  
   my $ru = $requestURI->as_string;
   my $aURL = AnnotatedURL->new(dbh => $dbh,
 			       URL => $ru);
-  my $ad = $aURL->getAnnotations({CurrentUser => $user});
+  my $ad = [];
+  my $cMatch = "";
+  $ad = $aURL->getAnnotations({CurrentUser => $user});
   my $right_arrow = "$images_dir/right_arrow.gif";
   my $left_arrow = "$images_dir/left_arrow.gif";
   my $discussion_icon = "$images_dir/discussion.gif";
   my $noteType = $user->getNoteType;
+  
   for my $annotation (@{$ad}) {
     my $id = $annotation->{AnnotationID};
     my $phraseRE = $annotation->{AnnotationPhraseRE};
@@ -145,24 +151,38 @@ sub insertAnnotationHolders {
     my ($href,$javascript,$sig1,$sig2) = ("","","","");
     $href = $scriptdir ."displayAnnotation.cgi?AnnotationID=$id";
     $javascript = "javascript:newWindow=window.open('$href','viewAnnotation','height=500,width=500,resizable=yes,scrollbars=yes,status=yes'); newWindow.focus();";
+    
     if ($noteType eq "Popup") {
       $sig1 = qq(<a href="$javascript"><img src="$right_arrow" border="0" title="$title" alt=" -[$title]- "  /></a>);
-      $sig2 = qq(<a href="$javascript"><img src="$left_arrow" border="0" title="$title" alt=" -[$title]- "  /></a>);
+	$sig2 = qq(<a href="$javascript"><img src="$left_arrow" border="0" title="$title" alt=" -[$title]- "  /></a>);
     } elsif ($noteType eq "FulltextBefore") {
       $sig1 = qq({{<a href="$javascript"><img src="$discussion_icon" border="0" title="$title" alt=" -[$title]- " /></a> $annotation}}<img src="$right_arrow" border="0" alt=" -[$title]- " />);
       $sig2 = qq(<img src="$left_arrow" border="0" alt=" -[$title]- " />)
-    } elsif ($noteType eq "FulltextAfter") {
-      $sig1 = qq(<img src="$right_arrow" border="0" alt=" -[$title]- " />);
-      $sig2 = qq(<img src="$left_arrow" border="0" alt=" -[$title]- " />{{<a href="$javascript"><img src="$discussion_icon" border="0" title="$title" alt=" -[$title]- " /></a> $annotation}});
+	} elsif ($noteType eq "FulltextAfter") {
+	  $sig1 = qq(<img src="$right_arrow" border="0" alt=" -[$title]- " />);
+	  $sig2 = qq(<img src="$left_arrow" border="0" alt=" -[$title]- " />{{<a href="$javascript"><img src="$discussion_icon" border="0" title="$title" alt=" -[$title]- " /></a> $annotation}});
+	}
+    
+    # get the section of code that matches the regular expression
+    # that is in the $context variable that "contextualizes" the
+    # phrase to be matched.
+    $cMatch = "";
+    if ($con =~ /($context)/s) {
+      $cMatch = $1;
     }
-    my ($cMatch) = $content =~ /($context)/s; 
+    
+    # $cMatch = $con =~ /($context)/s; 
+    
     my $newContent = $cMatch; 
     $newContent =~ s/($phraseRE)/$sig1$1$sig2/s;
+    
     my $len = length($cMatch);
-    my $index = index($content,$cMatch);
-    substr($content,$index,$len,$newContent);
+    
+    my $index = index($con,$cMatch);
+    
+    substr($con,$index,$len,$newContent);
   }
-  return $content;
+  return $con;
 }
 
 
@@ -196,14 +216,14 @@ sub getBodyOffset {
   # at the end of the <body> tag
   my $start = sub { my $bodyStartTemp = shift;
 		    if ($bodyStartTemp < $bodyStart) {
-			$bodyStart = $bodyStartTemp;
+		      $bodyStart = $bodyStartTemp;
 		    }
-		    };
+		  };
   my $end = sub {my $bodyEndTemp = shift; 
 		 if ($bodyEndTemp > $bodyEnd) {
-		     $bodyEnd = $bodyEndTemp;
+		   $bodyEnd = $bodyEndTemp;
 		 }
-		 };
+	       };
   $p->handler(start => $start, 'offset_end');
   # at the beginning of the </body> tag
   $p->handler(end => $end,'offset');
@@ -232,33 +252,24 @@ sub getBodyOffset {
   }
 }
 sub insertLinks {
-
+  
   my ($args) = @_;
   my $content = $args->{content};
   my $p = HTML::TokeParser::Simple->new(\$content);
   my $rv = "";
-  # save the request to the filesystem.  We do this for future requests from
+  # save the request to the database.  We do this for future requests from
   # the same address that we just can't track (things like javascript).
   # this doesn't work with some distributed proxy clients
-
+  
   my $request_host = "http://" . $requestURI->authority;
   my $request_host_with_directory = $request_host . dirname($requestURI->path);
-  $request_host_with_directory =~ s/\.$//; # in case there is no path
   my $request = $requestURI->as_string;
-  my $selfURL = $args->{selfURL};
-  my $taintedReqfile = $request .  $C->remote_addr;
-  $taintedReqfile =~ s/[^\w]+/_/g;
-  $taintedReqfile = "../requests/" . $taintedReqfile;
-  my $reqfile = "";
-  if ($taintedReqfile =~ /^[\w_\.\/]+$/) {
-      $reqfile = $1;
-  } else {
-      warn "$taintedReqfile\n";
-  }
-  open REQ, ">$reqfile";
-  print REQ $request;
-  close REQ;
-
+  $request_host_with_directory =~ s/\.$//; # in case there is no path
+  my $sth = $dbh->prepare("INSERT INTO AnnotationRequest (RequestURI, RemoteAddress, RequestURIDirectory) VALUES (?,?,?)");
+  
+  $sth->execute($request, $C->remote_addr, $request_host_with_directory);
+  
+  
   my %attrHash = (
 		  a => "href",
 		  base => "href",
@@ -267,14 +278,15 @@ sub insertLinks {
 		  script => "src",
 		  form => "action",
 		  area => "href"
-		 );
-
+		  );
+  
   while (my $token = $p->get_token ) {
     if ( $token->is_start_tag(qr/^(?:base)|(?:a)|(?:area)|(?:link)|(?:img)|(?:script)|(?:form)$/ )) {
       my $old_href = "";
       my $tag = $token->return_tag;
       my $attr = $attrHash{$tag};
       my $attribute_values = $token->return_attr;
+      
       $old_href = $token->return_attr->{$attr};
       # return_attr() returns a hashref of the attribute values
       my $new_href = '';
@@ -295,28 +307,37 @@ sub insertLinks {
 	} elsif ($old_href =~ /^\w+/) {
 	  # boo.html
 	  $new_href = $request_host_with_directory . "/". $old_href;
-      } elsif ($old_href =~ /^\.\.\//) {
-	# ../../foo.html
-	my $request_uri = URI->new($request);
-	my $old_uri = URI->new($old_href);
-	my @old_uri_segments = $old_uri->path_segments;
-	my @request_uri_segments = $request_uri->path_segments;
-	pop @request_uri_segments; # this is a hack
-	# a more elegant way to get at the next directory up is probably
-	# a good idea.
-
-	for my $segment (@old_uri_segments) {
-	  if ($segment =~ /^\.\./) {
-	    pop @request_uri_segments;
-	    shift @old_uri_segments;
+	} elsif ($old_href =~ /^\.\.\//) {
+	  # ../../foo.html
+	  my $request_uri = URI->new($request);
+	  my $old_uri = URI->new($old_href);
+	  my @old_uri_segments = $old_uri->path_segments;
+	  
+	  my @request_uri_segments = $request_uri->path_segments;
+	  
+	  pop @request_uri_segments; # this is a hack
+	  # a more elegant way to get at the next directory up is probably
+	  # a good idea.
+	  
+	  # make a copy so that we don't make errors in our links
+	  # by modifying the original array in the middle of using it
+	  my @iterations = @old_uri_segments;
+	  for my $segment (@iterations) {
+	    if ($segment =~ /^\.\./) {
+	      pop @request_uri_segments;
+	      shift @old_uri_segments;
+	    }
 	  }
+	  $new_href = $request_host ;
+	  $new_href .= join '/', @request_uri_segments;
+	  $new_href .= "/";
+	  $new_href .= join '/', @old_uri_segments;
 	}
-	$new_href = $request_host ;
-	$new_href .= join '/', @request_uri_segments;
-	$new_href .= "/";
-	$new_href .= join '/', @old_uri_segments;
-      }
-	unless (lc($tag) eq "img") {
+	unless (lc($tag) eq "img" or
+		(lc($tag) eq "link" and
+		 $attribute_values->{rel} eq "stylesheet") or
+		(lc($tag) eq "link" and
+		 $attribute_values->{rel} eq "shortcut icon")) {
 	  $new_href = $selfURL ."/". $new_href;
 	}
 	$token->set_attr($attr,$new_href);
@@ -358,7 +379,7 @@ sub getResponse {
   return $response;
 }
 sub getRequestURI {
-
+  
   my $request = $C->path_info;
   $request =~ s/^\///;
   my $uri = URI->new($request);
@@ -373,7 +394,7 @@ sub getRequestURI {
     $template->process("Error.html",$vars) or die $template->error(),"\n";
     exit;
   }
-  unless ($request !~ /(\.jpg|\.gif|\.jpeg|\.png|\.pdf|\.mpeg|\.mpg|\.ico)/) {
+  if ($request =~ /(\.jpg|\.gif|\.jpeg|\.png|\.pdf|\.mpeg|\.mpg|\.ico)$/) {
     $vars->{EnglishError} = "Not an Annotatable Resource";
     $vars->{Error} = "CannotAnnotate";
     $vars->{Resource} = $request;
@@ -394,7 +415,7 @@ sub checkAction {
 }
 
 sub run_tests {
-
+  
   print $C->header(-type=>"text/plain");
   my $scripturl = "http://www.annotateit.com/cgi-bin/annotateit.cgi";
   for my $file ("ahrefs.html",
