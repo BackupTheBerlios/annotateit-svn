@@ -51,38 +51,11 @@ To the httpd.conf file to get cgi scripts to be treated as such.
 
 3. Restart your server, checking the error log for problems.
 
-4. Edit the etc/annie.conf file
+4. Edit the site_perl/AnnotateitConfig.pm.sample file
 
-scriptdirectory is actually the url that points to the directory where
-the scripts are located.  It should be identical to the ScriptAlias
-directive in your httpd.conf file, above.
-
-url is the name of the virtual host (or host) that will be serving
-annotateit.
-
-imagesdirectory is the absolute path from the document root of the
-host serving annotateit where the images currently reside.
-
-documentdirectory is the directory where the documents saved by your
-users will reside when the documents are uploaded.  This path should
-be beneath the document root.
-
-documenturl is the absolutepath from the document root of the host
-serving annotateit where the documents will be.
-
-user is the username of the mysql user that you want to access the system.
-
-password is the password that the mysql user will use when accessing
-the database.
-
-name is the name of the database to use
-
-host is the name of the host that the database you are using resides.
-Unless you have a separate webserver and database server, leave host
-as "localhost"
-
-email is who mail from the system will appear to be from.  You could
-put your own email address in that field.
+Change it to reflect your setup.  There is some documentation in that
+file.  Make sure that you rename it to AnnotateitConfig.pm when you
+are through.
 
 4. In the cgi-bin directory check that the first line of every script
 points to your perl interpreter.  As it comes in the distribution, the
