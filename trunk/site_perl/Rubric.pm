@@ -38,6 +38,9 @@ sub load {
 sub _init {
   my ($self,%args) = @_;
   return if ($self->{_init}{__Rubric__}++);
+  my $rv = $self->SUPER::_init(%args);
+  my $class = ref($self) || $self;
+  bless ($self,$class);
   $self->mk_accessors($self->show_fields);
   for ($self->show_fields) {
     next if $self->is_inherited($_);
