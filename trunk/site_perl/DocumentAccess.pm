@@ -111,17 +111,21 @@ sub getDocumentIDs {
   } else {
     my $sql = "SELECT DA.DocumentID FROM DocumentAccess AS DA, user as U, Document as D WHERE DA.DocumentID = D.ObjectID and D.OwnerID = U.ID and DA.GroupID = ?";
     if (defined($self->{GroupID}) and $self->{GroupID} eq 'Private') {
-      unless (defined $self->{User}
-	      and ref($self->{User}) eq "User"
-	      and $self->{User}->hasRole("Admin")) {
+	# if the user is not an administrator, add to the query making it
+	# so that only the user's own private documents are viewable.
+	unless (defined $self->{User}
+	    and ref($self->{User}) eq "User"
+	    and $self->{User}->hasRole("Admin")) {
+	    $sql .= " AND D.OwnerID = ?";
+	    push @params, $self->{UserID};
+	} 
+    } 
+    if  (defined $self->{AuthorID} and $self->{AuthorID}) {
 	$sql .= " AND D.OwnerID = ?";
-	push @params, $self->{UserID};
-      }
-    } elsif (defined $self->{AuthorID} and $self->{AuthorID}) {
-      $sql .= " AND D.OwnerID = ?";
-      push @params, $self->{AuthorID};
-    } elsif (defined $self->{AuthorLastLetter} and $self->{AuthorLastLetter}) {
-      $sql .= " AND U.LastName RLIKE \"^" . $self->{AuthorLastLetter} . "\"";
+	push @params, $self->{AuthorID};
+    } 
+    if (defined $self->{AuthorLastLetter} and $self->{AuthorLastLetter}) {
+	$sql .= " AND U.LastName RLIKE \"^" . $self->{AuthorLastLetter} . "\"";
     }
     $sql .= " ORDER BY U.LastName";
     $sth = $self->{dbh}->prepare($sql);

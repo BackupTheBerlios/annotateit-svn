@@ -27,6 +27,7 @@
 [% IF User.AdaptiveHelp.EvalVectors %]
 [% INCLUDE AH_EvalVectorDeleteOne %]
 [% END %]
+[% IF AffectedObjects.size() %]
 <p>Below is a list objects that the deleted evaluation vector will impact.  If you really want to delete the evaluation vector after seeing the list, click &quot;Ok&quot; at the bottom of the screen.</p>
 <table>
 <tr>
@@ -40,6 +41,7 @@
 </tr>
 [% END %]
 </table>
+[% END %]
 <form action="[% scriptdir %]manageEvalVectors.cgi">
 <input type="hidden" name="EvalVectorID" value="[% EV.ID %]" />
 <input type="hidden" name="action" value="ConfirmDelete" />

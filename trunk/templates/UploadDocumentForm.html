@@ -21,8 +21,9 @@
 
 %]
   <body>
-    [% IF Result == "Successful Upload" %]
-    <h1>Upload Successful</h1>
+   <!-- [% ResultValue %] -->
+    [% IF Result == "Success" %]
+    <h1>[% ResultValue %] Successful</h1>
  (To <a href="[% scriptdir %]manageUserInfo.cgi">Main Menu</a>)<br />
  (To <a href="[% scriptdir %]manageDocuments.cgi">Manage Documents</a>)<br />
     <p>Please check that your document was uploaded correctly.  Then, print this page for future reference</p>
@@ -43,16 +44,15 @@
 	  <td>Upload Date:</td>
 	  <td>[% Document.UploadDate %]</td>
 	</tr>
-	<tr>
+<!--	<tr>
 	  <td>System Signature</td>
 	  <td>[% Document.SystemSignature %]</td>
 	</tr>
 	<tr>
 	  <td>Document Signature</td>
 	  <td>[% Document.DocumentSignature %]</td>
-	</tr>
+	</tr> -->
     </table>
-    <a href="javascript:window.close()">Close this Window</a><br />
     <a href="[% scriptdir %]manageUserInfo.cgi">Main User Menu</a><br />
     [% ELSE %]
     <h1>Upload/Edit a Document</h1>

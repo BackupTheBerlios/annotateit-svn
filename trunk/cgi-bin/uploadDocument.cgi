@@ -277,9 +277,8 @@ sub makeDoc {
                 # which is why I don't need to save first.
 
   my $rv = $document->getDisplayData( UserID => $user->getID,
-				      serverURL => $serverURL,
-				      docURL => $docURL,
-				      docDir => $docDir);
+				      Config => $config);
+
   return $rv;
 }
 sub UploadDate {
@@ -370,7 +369,8 @@ sub editDocument {
   $vars->{scriptdir} = $scriptdir;
   $vars->{serverurl} = $serverURL;
   $vars->{formAction} = "uploadDocument.cgi";
-  $vars->{Document} = $document->getDisplayData(UserID => $user->getID);
+  $vars->{Document} = $document->getDisplayData(UserID => $user->getID,
+						Config=>$config);
   $vars->{isOwner} = ($document->OwnerID == $user->getID);
   print $C->header(-cookie=>$authInfo->{cookie});
   $template->process("UploadDocumentForm.html",$vars) || die $template->error;
@@ -393,9 +393,11 @@ sub saveFile {
     $ft = [$document->Filename,$document->Type];
   }
   my $rv2 = &makeDoc($ft);
+  my %resultValues = ( outboxMod => "Outbox Modification" );
   my $vars = { scriptdir => $scriptdir,
 	       formAction => "uploadDocument.cgi",
-	       Result => "Successful Upload",
+	       Result => "Success",
+	       ResultValue => $resultValues{$action},
 	       Document => $rv2};
   print $C->header(-cookie=>$authInfo->{cookie});
   $template->process("UploadDocumentForm.html", $vars) or die $template->error();

@@ -38,7 +38,7 @@ $scriptdir = $config->param("server.scriptdirectory");
 $serverURL = $config->param("server.url");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates" );
 
 unless ($authInfo->{LoggedIn}) {
@@ -50,7 +50,7 @@ unless ($authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars );
   exit;
 }
-my $user = User->load(dbh => $dbh,
+our $user = User->load(dbh => $dbh,
 		      ID => $authInfo->{UserID});
 my $action = $C->param("action") || "";
 if ($action eq "") {
@@ -82,7 +82,7 @@ sub printList {
 sub printEditForm {
   my $evID = $C->param("EvalVectorID");
   $evID =~ s/[^\d]//g;
-  my $ev = EvalVector->load( dbh => $dbh,
+  our $ev = EvalVector->load( dbh => $dbh,
 			     ID => $evID );
   &checkOwnership($ev);
   my $edd = $ev->getDisplayData;
@@ -110,7 +110,7 @@ sub printValueNamesForm {
   $EvalVectorID =~ s/[^\d]//g;
   my $user = User->load(dbh => $dbh,
 			ID => $authInfo->{UserID});
-  my $ev = EvalVector->load( dbh => $dbh,
+  our $ev = EvalVector->load( dbh => $dbh,
 			     ID => $EvalVectorID);
   &checkOwnership($ev);
   $ev->Title($Title);
@@ -136,7 +136,7 @@ sub save {
   $ID =~ s/[^\d]//g;
   my $user = User->load(dbh => $dbh,
 			ID => $authInfo->{UserID});
-  my $ev = EvalVector->load( dbh => $dbh,
+  our $ev = EvalVector->load( dbh => $dbh,
 			     ID => $ID );
   &checkOwnership($ev);
   my @params = $C->param;
@@ -159,7 +159,7 @@ sub previewDelete {
     $evid =~ s/[^\d]//g;
     &checkEvid($evid);
 
-    my $ev = EvalVector->load( ID => $evid,
+    our $ev = EvalVector->load( ID => $evid,
 			       dbh => $dbh);
     
     &checkOwnership($ev);    
@@ -168,6 +168,7 @@ sub previewDelete {
     # Check object map table both ways:
     my $sth = $dbh->prepare("SELECT ToObjectID,ToObjectClass FROM ObjectMap WHERE FromObjectID = ? AND FromObjectClass = 'EvalVector'");
     $sth->execute($evid);
+    
     my @Objects = ();
     while (my ($oid,$oclass) = $sth->fetchrow_array) {
 	push @Objects, {ID => $oid, Class=>$oclass};

@@ -1,5 +1,14 @@
 2004-03-16 jnerad
 
+	- (Minor Bugfix) Found and fixed a usability problem with
+	manageEvalVectors.cgi such that no dependent objects table is
+	shown if there are no dependent objects.
+	
+	
+	- (Minor Bugfix) Found and fixed a problem with
+	manageDocuments.cgi so that the display of documents by last name
+	works correctly.
+	
 	- (Minor Feature) Added some explanation of Active/Inactive
 	Open/Closed Groups in manageGroups.cgi template
 

@@ -177,9 +177,10 @@ sub getDisplayData {
   if (defined $userID) {
     $outboxStatus = $self->outboxStatus($userID);
   }
-  my $serverURL = $main::serverURL || croak "No ServerURL in Main";
-  my $docURL = $main::docURL || croak "No docURL in Main";
-  my $docDir = $main::docDir || croak "No docDir in Main";
+  croak "Please pass a config object to Document.pm for doc->getDisplayData" unless (defined $args{Config} and ref( $args{Config}) eq 'Config::Simple');
+  my $serverURL = $args{Config}->param("server.url");
+  my $docURL = $args{Config}->param("server.documenturl");
+  my $docDir = $args{Config}->param("server.documentdirectory");
   my $htmlDoc = $self->Filename . ".html";
   my $textDoc = $self->Filename . ".txt";
   my $type = $self->Type;

@@ -42,19 +42,19 @@ $docDir = $config->param("server.documentdirectory");
 $docURL = $config->param("server.documenturl");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $authorID = $C->param("AuthorID") || 0;
+our $authorID = $C->param("AuthorID") || 0;
 $authorID =~ s/[^\d]//g;
-my $outboxStatus = $C->param("OutboxStatus");
-my $docID = $C->param("DocumentID");
-$docID =~ s/[^\d]//g;
-my $authorLastName = $C->param("AuthorLastName") || "";
+our $outboxStatus = $C->param("OutboxStatus");
+our $docID = $C->param("DocumentID");
+defined ($docID) && $docID =~ s/[^\d]//g;
+our $authorLastName = $C->param("AuthorLastName") || "";
 
 our $action = $C->param("action") || "";
 our $ID = $C->param("ID") || "";
-my $startAt = $C->param("StartAt") || 0;
-my $template = Template->new( RELATIVE => 1,
+our $startAt = $C->param("StartAt") || 0;
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates" );
-my $documentSet = $C->param("DocumentSet") || "Owned";
+our $documentSet = $C->param("DocumentSet") || "Owned";
 
 unless ($authInfo->{LoggedIn}) {
   my $vars = { formAction => "manageDocuments.cgi",
@@ -66,10 +66,10 @@ unless ($authInfo->{LoggedIn}) {
   exit;
 }
 
-my $user = User->load(dbh => $dbh,
+our $user = User->load(dbh => $dbh,
 		     ID => $authInfo->{UserID});
-my $Documents = [];
-my $gmDD = [];
+our $Documents = [];
+our $gmDD = [];
 if ($documentSet eq "Owned") {
   $Documents = $user->getDocuments;
 } else {
