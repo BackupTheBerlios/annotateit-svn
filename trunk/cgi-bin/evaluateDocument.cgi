@@ -34,7 +34,7 @@ use Assignment;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $authInfo,$scriptdir,$cgiDir, $docDir, $serverURL,$docURL);
 $scriptdir = $config->param("server.scriptdirectory");
 $serverURL = $config->param("server.url");
@@ -43,9 +43,9 @@ $docDir = $config->param("server.documentdirectory");
 $docURL = $config->param("server.documenturl");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $docID = $C->param("DocumentID");
+our $docID = $C->param("DocumentID");
 our $action = $C->param("action") || "";
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates" );
 
 unless ($authInfo->{LoggedIn}) {
@@ -57,7 +57,7 @@ unless ($authInfo->{LoggedIn}) {
   $template->process("loginScriptForm.html",$vars) or die $template->error;
   exit;
 }
-my $user = User->load(dbh => $dbh,
+our $user = User->load(dbh => $dbh,
 		     ID => $authInfo->{UserID});
 unless ($user->hasRole("Admin") || $user->hasRole("Teacher") || $user->hasRole("Researcher")) {
  my $vars = { scriptdir => $scriptdir,
