@@ -73,7 +73,13 @@
   If you have reached this page in error, please report the details to <a href="mailto:support@buzzmaven.com">support@buzzmaven.com</a> the page you were trying to annotate by copying the address from the location bar in your browser into the email message.</p>
         [% ELSIF Error == 'CannotAnnotate' %]
         <p>The resource you requested, located at <a href="[% Resource %]">[% Resource %]</a> cannot be annotated by this system.</p>
-
+	[% ELSIF Error == 'AddEvalVectorMinValue' %]
+	<p>Sorry, but you can't make the minimum value less than zero.  That would mean that you want to take points away from a student for something.  While this capability may be added in the future, it is not available at the moment.</p>
+	[% ELSIF Error == 'AddEvalVectorMaxValue' %]
+	<p>Sorry, but you can't make the minimum value less than zero.  That would mean that you want to take points away from a student for something.  Wile this capability may be added in the future, it is not available at the moment.</p>
+	[% ELSIF Error == 'AddEvalVectorIncrement' %]
+	<p>Sorry, but you can't make the increment less than zero.  I just don't think that way.</p>
+	
 [% END %]
 <!-- [% ENV %] -->
 [% IF error %]
