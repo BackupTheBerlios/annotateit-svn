@@ -88,27 +88,31 @@ sub printContent {
 #  my $io = IO::Handle->new();
 #  $io->fdopen(fileno(STDOUT),"w");
   my $headers = $http_response->headers;
+  my %xheaders = ();
   my $header_key = "";
   my %header_args = ();
   for my $key (keys %{$headers}) {
-    $header_key = "-$key";
-    $header_args{$header_key} = $headers->{$key};
+      if ($key =~ /^x/i) {
+	  $xheaders{ucfirst($key)} = $headers->{$key};
+      } else {
+	  my $old_key = $key;
+	  $key =~ s/-/_/g;
+	  $header_key = lc("-$key");
+	  $header_args{$header_key} = $headers->{$old_key};
+      }
+      
   }
-  $header_args{'-content-length'} = length($content);
+  $header_args{'-content_length'} = length($content);
   $header_args{'-type'} ||= "text/html";
   $header_args{'-expires'} = "-1d"; # so we make sure
                                          # not to cache anything
-
-  # oddly, a simple print statement doesn't print like we want it to.
-  # This may be a problem with Template taking over the IO streams,
-  # but I haven't the foggiest idea when or why it happens. [shrug]
+  
+  # I have no idea why under mod perl, I can't print the headers to the log.
+  # but that is really super aggravating.
 
   print $C->header(%header_args);
   print $content;
-#  $io->print($C->header(%header_args));
-#  $io->print($content);
-#  $io->close();
-#  undef $io;
+
   exit;
 }
 
