@@ -26,14 +26,13 @@ use Config::Simple qw( -strict );
 use lib ("../site_perl");
 use auth;
 use widgets;
-use http;
 use User;
 use Annotation;
 use CGI;
 our $C = CGI->new;
 my $config = Config::Simple->new("../etc/annie.conf");
 our $dbh = &widgets::dbConnect($config);
-our $annotationID = $http::C->param("AnnotationID");
+our $annotationID = $C->param("AnnotationID");
 our $authInfo = &auth::authenticated($dbh,\$C);
 our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates" );
@@ -44,7 +43,7 @@ if (!($authInfo->{LoggedIn})) {
 	       randomValue => &auth::randomValue(),
 	       formAction => "deleteAnnotations.cgi",
 	       hiddenVar => [{ name => "AnnotationID", value => $annotationID }]};
-  print $http::C->header();
+  print $C->header();
   $template->process("loginScriptForm.html",$vars) or die $template->error;
   exit;
 }
@@ -57,24 +56,24 @@ our $annotation = Annotation->load(dbh => $dbh,
 
 
 &unauthorized($user->deniedRead($annotation)) if ($user->deniedRead($annotation));
-my $submit = $http::C->param("submit") || "";
-my $backpage = $http::C->param("backpage") || "displayAnnotation.cgi?AnnotationID=$annotationID";
+my $submit = $C->param("submit") || "";
+my $backpage = $C->param("backpage") || "displayAnnotation.cgi?AnnotationID=$annotationID";
 if ($submit eq "Delete Annotation") {
   &unauthorized($user->deniedWrite($annotation)) if ($user->deniedWrite($annotation));
   $annotation->delete;
-  print $http::C->header(-cookie=>$authInfo->{cookie});
+  print $C->header(-cookie=>$authInfo->{cookie});
   my $vars = {};
   $template->process("DeletedAnnotations.html",$vars) or die $template->error;
   exit;
 } elsif ($submit eq "Don't Delete Annotation") {
-  my $redir = $serverURL . &http::scriptdir . $backpage;
-  print $http::C->redirect(-url=>$redir,
+  my $redir = $serverURL . $scriptdir . $backpage;
+  print $C->redirect(-url=>$redir,
 			   -cookie=>$authInfo->{cookie});
   exit;
 } else {
   my $vars = $annotation->getDisplayData({CurrentUser => $user});
   $vars->{formAction} = "deleteAnnotations.cgi";
-  print $http::C->header(-cookie=>$authInfo->{cookie});
+  print $C->header(-cookie=>$authInfo->{cookie});
   $template->process("DeletedAnnotationsCheck.html",$vars) or die $template->error;
 
   exit;
@@ -87,7 +86,7 @@ sub unauthorized {
   $vars->{EnglishAction} = "delete it";
   $vars->{Error} = 'NotAuthorizedDisplayAnnotation';
   $vars->{EnglishError} = 'Not Authorized';
-  print $http::C->header(-cookie => $authInfo->{cookie});
+  print $C->header(-cookie => $authInfo->{cookie});
   $template->process("Error.html",$vars) or die $template->error;
 
   exit;
