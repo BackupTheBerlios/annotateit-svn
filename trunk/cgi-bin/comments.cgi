@@ -28,6 +28,7 @@ use auth;
 use Comment;
 use User;
 use CGI;
+$ENV{PATH} = "/usr/lib:/usr/bin:/bin:/usr/local/bin";
 our $C = CGI->new;
 
 my $config = Config::Simple->new("../etc/annie.conf");
@@ -41,7 +42,7 @@ our $commentText = &widgets::scrub('keeplinks',$C->param("CommentText") || "");
 our $action = $C->param("action") || "";
 our $template = Template->new( RELATIVE => 1,
 			       INCLUDE_PATH => "../templates");
-my $user = User->load( ID => $authInfo->{UserID},
+our $user = User->load( ID => $authInfo->{UserID},
 		       dbh => $dbh );
 if (!$authInfo->{LoggedIn}) {
   my $vars = { scriptdir => $scriptdir,
