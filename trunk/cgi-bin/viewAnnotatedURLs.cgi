@@ -30,13 +30,13 @@ use User;
 use CGI;
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $authInfo, $scriptdir, $serverurl);
 $scriptdir = $config->param("server.scriptdirectory");
 $serverurl = $config->param("server.url");
 $dbh = &widgets::dbConnect($config);
 $authInfo = &auth::authenticated($dbh,\$C);
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
 unless ($authInfo->{LoggedIn}) {
   my $vars = {scriptdir => $scriptdir,
@@ -47,21 +47,21 @@ unless ($authInfo->{LoggedIn}) {
   exit;
 }
 
-my $user = User->load( dbh => $dbh,
+our $user = User->load( dbh => $dbh,
 		       ID => $authInfo->{UserID});
 my $sth = $dbh->prepare("SELECT ID FROM annotation WHERE UserID = ?");
 $sth->execute($user->getID);
-my @annotations =();
-my %annotatedURLS = ();
+our @annotations =();
+our %annotatedURLS = ();
 while (my ($id) = $sth->fetchrow_array) {
   my $annotation = Annotation->load(dbh => $dbh,
 				    ID => $id);
   my $url = $annotation->getURL();
+  $url =~ s/\/$//;
   next if (defined $annotatedURLS{$url} and $annotatedURLS{$url} == 1);
   $annotatedURLS{$url} = 1;
   push @annotations, $annotation->getDisplayData({CurrentUser => $user});
 }
-
 
 my $vars = {User  => $user->getDisplayData,
 	 AnnotatedURLs => \@annotations,
