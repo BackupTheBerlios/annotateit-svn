@@ -1,3 +1,13 @@
+2004-11-11 jnerad
+
+	- Thanks to the veterans who gave their lives for our country.
+
+	- (Minor Bugfix) Removed a flaw in a select statement that was
+	causing the system to error out.
+
+	- (Minor Feature) Added the user's email to the error trapping
+	that the system does, in case follow up is desired.
+	
 2004-05-07 jnerad
 
 	- (Minor Bugfixes) Documentation, syntax errors, other issues that
