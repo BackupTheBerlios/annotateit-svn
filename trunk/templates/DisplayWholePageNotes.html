@@ -28,14 +28,6 @@
   <body>
 
     <h1>Annotations for [% currentURL %]</h1>
-    <h2>Phrasal Notes</h2>
-    [% FOREACH Annotations.Phrase %]
-    ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
-    [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
-    [% AnnotationText %]<br />
-    <hr />
-    
-    [% END %]
     <h2>Whole Page Notes</h2>
     
     [% FOREACH Annotations.WholePage %]
@@ -43,6 +35,14 @@
     [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
       [% AnnotationText %]</a><br />
     <hr />
+    [% END %]
+    <h2>Phrasal Notes</h2>
+    [% FOREACH Annotations.Phrase %]
+    ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
+    [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
+    [% AnnotationText %]<br />
+    <hr />
+    
     [% END %]
 
 
