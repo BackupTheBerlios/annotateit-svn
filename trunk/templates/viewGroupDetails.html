@@ -22,12 +22,13 @@
 %]
   <body>
     <h1>[% Group.GroupName %] ([% Group.Type %])</h1>
+    <p>You can go to the <a href="[% scriptdir %]manageUserInfo.cgi">main menu</a>.</p>
     [% IF Group.UserIsOwner %]
      <a href="[% scriptdir %]pleaseJoin.cgi?GID=[% Group.GroupID %]">Invite people to join your group</a>
     [% END %]
-    [% IF CanCloseGroup %]<p>Group is <strong>[% Group.State %]</strong> to new members. 
-    [% IF Group.State == 'Open' %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Closed;GroupID=[% Group.GroupID %]">Close</a>)[% ELSE %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Open;GroupID=[% Group.GroupID %]">Open</a>)[% END %]</p>
-   <p>Group is <strong>[% Group.Active %]</strong>. (<a href="[% serverurl %][% scriptdir %][% formAction %]?GroupID=[% Group.GroupID %];action=[% IF Group.Active == 'Active' %]Deactivate">Deactivate[% ELSE %]Activate">Activate[% END %]</a>)</p>
+    [% IF CanCloseGroup %]<p>Group is <strong>[% Group.State %]</strong> to new members. [% IF Group.State == 'Open' %]This means that others can still join the group.  If you close it, no one else will be able to join the group.[% ELSE %] This means that others cannot join the group.  If you open it, others will again be able to join the group.[% END %] 
+    [% IF Group.State == 'Open' %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Closed;GroupID=[% Group.GroupID %]">Close Group</a>)[% ELSE %](<a href="[% serverurl %][% scriptdir %][% formAction %]?action=Open;GroupID=[% Group.GroupID %]">Open Group</a>)[% END %]</p>
+   <p>Group is <strong>[% Group.Active %]</strong>.[% IF Group.Active == 'Active' %] This means that the group will show up in the list of groups you may select from in any drop down menus during annotation.  IF you deactivate the group, you will no longer be able to select the group in the drop-down menus, though you can at any time reactivate the group. [% ELSE %] This means that the group will not show up in the list of groups you may select from in any drop down menus during annotation.  If you activate the group, you will be able to select the group in drop-down menus. [% END %](<a href="[% serverurl %][% scriptdir %][% formAction %]?GroupID=[% Group.GroupID %];action=[% IF Group.Active == 'Active' %]Deactivate">Deactivate[% ELSE %]Activate">Activate[% END %] Group</a>)</p>
 [% END %]
     
     <p>Group Members:</p>
