@@ -32,5 +32,6 @@
 		[% INCLUDE 'md5.js' %]
 		[% INCLUDE 'login.js' %]
 	[% END %]	    
+	[% IF User %]<!-- User: [% User.Name %] Logged On -->[% END %]
   </head>
 
