@@ -1,0 +1,9 @@
+For a complete todo list, see bugzilla.buzzmaven.com.  Unfortunately, in a move from another hosting company, I lost my bugzilla database.  I recall a few of the issues, and more will come to light as I go.
+
+* Assignment cloning from one group to another so that instructors can reuse assignments
+* Community annotations, so that predefined annotations exist for instructors to choose from
+* Change appearance of annotations based on reviewer's relationship to text (copy editor, content expert, etc.)
+* A way for instructors to numerically rate a document based on criteria they define
+* Convert all modules to Class::Accessor and Class::Fields for use with Object.pm
+
+see http://bugzilla.buzzmaven.com for more information.

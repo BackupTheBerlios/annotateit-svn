@@ -1,0 +1,62 @@
+[%# -*- mode: html -*- %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+
+<form action="[% scriptdir %][% FormAction %]">
+[% IF Screen == "One" %]
+<input type="hidden" name="action" value="setValueNames" />
+[% END %]
+[% IF EV.ID %]
+<input type="hidden" name="EvalVectorID" value="[% EV.ID %]" />
+[% END %]
+<table>
+<tr>
+<td>Quality</td>
+<td><input type="text" name="Title" size="20" maxlength="80" value="[% EV.Title %]" /></td>
+</tr>
+<tr>
+<td>Minimum Value</td>
+<td><input type="text" name="MinimumValue" size="4" value="[% EV.MinimumValue %]" /></td>
+</tr>
+<tr>
+<td>Maximum Value</td>
+<td><input type="text" name="MaximumValue" size="4" value="[% EV.MaximumValue %]" /></td>
+</tr>
+<tr>
+<td>Increment</td>
+<td><input type="text" name="Increment" size="4" value="[% EV.Increment %]" /></td>
+</tr>
+<tr>
+<td>Type</td>
+<td><select name="Type">[% FOREACH v = ['Select','Radio','Box'] %]
+	[% IF v == EV.Type %][% selected = 'selected="selected"' %][% ELSE %][% selected = '' %][% END %]
+	<option value="[% v %]" [% selected %]>[% v %]</option>
+	[% END %]
+	</select>
+</tr>
+<tr>
+<td colspan="2" align="center"><input type="submit" name="submit" value="On To Screen 2" /</td>
+</tr>
+</table>
+</form>
+
+

@@ -1,0 +1,70 @@
+[% INCLUDE Header %]
+[%# -*- mode: html -*- %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<body>
+<h1>[% Title %]</h1>
+[% IF Screen == "List" %]
+[% IF User.AdaptiveHelp.EvalVectors %]
+[% INCLUDE AH_ManageEvalVector %]
+[% END %]
+<p>Below is a list of your evaluation vectors.  If you want to edit one of them, click its name.  If you want, you can <a href="[% scriptdir %]addEvaluationVector.cgi">add an evaluation vector</a>.  You can also <a href="[% scriptdir %]manageUserInfo.cgi">return to the main menu</a>.</p>
+<table>
+ <tr>
+  <th>Vector Name</th>
+  <th>Action</th>
+ <tr>
+ [% FOREACH AvailableEvalVectors %]
+ <tr>
+  <td><a href="[% scriptdir %]manageEvalVectors.cgi?action=Edit;EvalVectorID=[% ID %]">[% Title %]</a></td>
+  <td><a href="[% scriptdir %]manageEvalVectors.cgi?action=Delete;EvalVectorID=[% ID %]">Delete</a></td>
+ </tr>
+ [% END %]
+</table>
+[% ELSIF Screen == "One" %]
+ [% IF User.AdaptiveHelp.EvalVectors %]
+ [% INCLUDE AH_EvalVectorHelp %]
+ [% END %]
+ [% INCLUDE EvalVectorDescForm %]
+[% ELSIF Screen == "Two" %]
+ [% IF User.AdaptiveHelp.EvalVectors %]
+ [% INCLUDE AH_EvalVectorAddTwo %]
+ [% END %]
+ [% INCLUDE EvalVectorDetails %]
+ [% INCLUDE EvalVectorValueNamesForm %]
+[% ELSIF Screen == "Three" %]
+ [% IF User.AdaptiveHelp.EvalVectors %]
+ [% INCLUDE AH_EvalVectorSave %]
+ [% END %]
+ <p>Your evaluation vector has been saved.  Here is what it looks like:</p>
+ [% INCLUDE EvalVectorDetails %]
+<p><ul>
+	<li>You can <a href="[% scriptdir %]addEvaluationVector.cgi">add another eval vector</a>.</li>
+	<li>You can return to <a href="[% scriptdir %]manageEvalVectors.cgi">Manage Evaluation Vectors</a></li>
+	<li>You can return to <a href="[% scriptdir %]manageUserInfo.cgi">the main menu</a></li>
+	<li>You can go to <a href="[% scriptdir %]manageRubrics.cgi">manage your rubrics</li>
+	<li>You can go to <a href="[% scriptdir %]displayAssignments.cgi">manage your assignments</a></li>
+   </ul>
+</p>
+[% END %]
+[% INCLUDE Footer %]
+

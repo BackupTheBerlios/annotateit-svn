@@ -1,0 +1,58 @@
+#!/usr/local/bin/perl -w
+# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt
+use strict;
+use Config::Simple qw(-strict);
+use lib "../site_perl";
+use widgets;
+use Test::More qw(no_plan);
+use Comment;
+use User;
+my $config = Config::Simple->new("../etc/test.conf");
+my $dbh = &widgets::dbConnect($config);
+my $user = $config->param('database.user');
+my $password = $config->param('database.password');
+my $database = $config->param('database.name');
+`mysql -u $user -p$password $database < sql/testUser.sql`;
+`mysql -u $user -p$password $database < sql/Comment.sql`;
+$user = User->load(ID => 1,
+		   dbh => $dbh);
+my @methods = qw( load save delete new getID getParentID getComment getEntered
+		  getUserID setID setParentID setComment setEntered setUserID
+		  getDisplayData );
+
+BEGIN { use_ok( 'Comment' ); }
+require_ok('Comment');
+my $comment = Comment->new( dbh => $dbh );
+isa_ok($comment, 'Comment');
+can_ok($comment, @methods);
+$comment->setParentID("1");
+$comment->setComment("Hello");
+$comment->setEntered("2003-03-01");
+$comment->setUserID("0");
+$comment->{Orphan} = "Yes"; # necessary because we aren't using a real comment
+$comment->save;
+my $id = $comment->getID;
+ok($id, 'Returned a valid ID');
+my $a2 = Comment->load( dbh => $dbh,
+			ID => $id);
+$comment->setEntered($a2->getEntered);
+is_deeply($comment,$a2,'Data Structures are the Same from save/load');
+

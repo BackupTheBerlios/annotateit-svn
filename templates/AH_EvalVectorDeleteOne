@@ -1,0 +1,29 @@
+[%# -*- mode: html -*- %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<h2>What is this?</h2>
+<p>This is the screen you see when you have selected to delete an evaluation vector on a previous screen.  Below, if there are any, you'll see a list of objects and their ids that will be impacted by this delete, and consequently deleted also.  <strong>Only proceed if you are comfortable losing all of the objects listed.</strong></p>
+
+<h2>What do I do with it?</h2>
+<p>From here, you can either use your back button to get out of this screen, or push the &quot;Ok&quot; button, which will delete all of the objects listed and the evaluation vectors you chose.</p>
+
+

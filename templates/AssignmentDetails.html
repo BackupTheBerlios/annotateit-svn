@@ -1,0 +1,116 @@
+[% INCLUDE Header %]
+
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>[% Title %]</h1>
+	[% IF User.AdaptiveHelp.Assignments %]
+	[% INCLUDE AH_AssignmentDetailsHeader %]
+	[% END %]
+    [% IF CanUpload %]<p>Do you want to <a href="[% scriptdir %]uploadDocument.cgi?AssignmentID=[% Assignment.ID %]">hand in a document</a> for this assignment? </p>[% END %]
+    <table>
+	<tr>
+	  <td>For</td>
+	  <td>[% Assignment.GroupName %]</td>
+	</tr>
+	<tr>
+	  <td>Title</td>
+	  <td>[% Assignment.Title %]</td>
+	</tr>
+	<tr>
+	  <td>Due Date</td>
+	  <td>[% Assignment.DueDate %]</td>
+	</tr>
+	<tr>
+	  <td colspan="2">[% Assignment.Description %]</td>
+	</tr>
+    </table>
+
+    [% IF HasDocuments %]
+    <table>
+	<tr>
+	  <td>Action</td>
+	  <td>Username</td>
+	  <td>Upload Date</td>
+	  <td>Webified File</td>
+	  <td>Native File</td>
+	  <td>Text File</td>
+	  [% IF CanViewStats %]<td>File Stats</td>[% END %]
+	</tr>
+	[% FOREACH Document %]
+          <tr>
+	 [% IF isOwner %]<td><a href="[% scripturl %]evaluateDocument.cgi?DocumentID=[% ID %]">Evaluate</a></td>[% END %]
+           <td>[% OwnerName %]</td>
+           <td>[% UploadDate %]</td>
+           <td><a href="[% serverurl %][% scriptdir %]annotateit.cgi/[% HTMLURL %]" target="_blank">HTML</a></td>
+           <td><a href="[% NativeURL %]">[% Type %]</a></td>
+           <td><a href="[% TextURL %]" garget="_blank">Text</a></td>
+           [% IF CanViewStats %]<td><a href="[% scriptdir %]fileStats.cgi?ID=[% ID %]" target="_blank">Stats</a></td>[% END %]
+          </tr>
+	[% END %]
+    </table>
+[% END %]
+    [% IF RubricEvalVectors.size %]
+    <p>Documents handed in will be graded according to the criteria found in the following rubrics:</p>
+	[% FOREACH Rubrics %]
+	[% Title %] ([% Type %])<br />
+	[% END %]
+	<p>Those rubrics contain the following evaluation criteria.</p>
+	<table>
+	<tr>
+	<th>Title</th>
+	<th>Min. - Max.</th>
+	<th>Weight (larger counts more)</th>
+	</tr>
+
+	[% FOREACH r = RubricEvalVectors %]
+	<tr>
+	 <td><a href="[% scriptdir %]viewEvalVector.cgi?EvalVectorID=[% r.ID %]">[% r.Title %]</a></td>
+	 <td align="center">[% r.MinimumValue %] - [% r.MaximumValue %]</td>
+	 <td align="center">[% r.Weight %]</td>
+        </tr>
+	[% END %]
+	</table>
+    [% END %]
+    [% IF EvalVectors.size %]
+      <p>In addition, documents handed in will be graded according to the following criteria:</p>
+      <table>
+	<tr>
+	  <th>Title</th>
+	  <th>Min. - Max.</th>
+	  <th>Weight (larger counts more)</th>
+	</tr>
+	[% FOREACH EvalVectors %]
+	<tr>
+	  <td><a href="[% scriptdir %]viewEvalVector.cgi?EvalVectorID=[% r.ID %]">[% Title %]</a></td>
+	  <td>[% MinimumValue %] - [% MaximumValue %]</td>
+	  <td>[% Weight %]</td>
+	</tr>
+	[% END %]
+      </table>
+    [% END %]
+    [% IF CanViewAssignmentStats %]<p>You can <a target="_blank" href="[% scriptdir %]assignmentStats.cgi?ID=[% Assignment.ID %]">view average stats</a> for this assignment. (This can take awhile for assignments with many documents.)</p>[% END %] 
+    
+    <hr />
+    [% INCLUDE Footer %]
+  </body>
+</html>

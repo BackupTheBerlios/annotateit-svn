@@ -1,0 +1,107 @@
+[% Title = 'Your Documents' %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>Document Management</h1>
+[% IF User.isResearcher || User.isTeacher || User.isAdmin %]
+[% evaluate = 'okay' %]
+[% END %]
+
+
+(To <a href="[% scriptdir %]manageUserInfo.cgi">Main Menu</a>)<br />
+<form action="[% scriptdir %]manageDocuments.cgi">
+Display Documents available to which group? 
+<select name="DocumentSet">
+[% FOREACH Groups.AllGroups %]<option value="[% GroupID %]"[% IF (GroupID == DocumentSet) %] selected="selected"[% END %]>[% GroupName %]</option>[% END %]</select><br />
+Find documents that you are finished with?
+<select name="OutboxStatus">
+ [% FOREACH lv = ['Any','Finished','Not Finished'] %]<option value="[% lv %]"[% IF (OutboxStatus == lv) %] selected="selected"[% END %]>[% lv %]</option>[% END %]
+</select>
+[% IF (DocumentSet != 'Owned' and DocumentSet != 'Public' and DocumentSet != 'Private') %]
+<br />Get Documents by Author: <select name="AuthorID">
+<option value="">All</option>
+[% FOREACH Author %]
+<option value="[% ID %]"[% IF AuthorID == ID %] selected="selected"[% END %]>[% Name %]</option>
+[% END %]
+</select>
+[% END %]
+<input type="submit" name="submit" value="View Documents" />
+</form>
+[% UNLESS (DocumentSet == 'Owned') %]<br />(or) Author Last Name starts with [% FOREACH n = ['A' .. 'Z'] %]<a href="[% scriptdir %]manageDocuments.cgi?DocumentSet=[% DocumentSet %];OutboxStatus=[% OutboxStatus %];AuthorLastName=[% n %]">[% n %]</a> [% END %][% END %]
+<br />
+
+<table>
+<tr>
+<th>Edit</th>
+<th>Assignment</th>
+<th>Due<br />Date</th>
+<th>Author</th>
+<th>Webified (state)</th>
+<th>&quot;Access&quot;<br /> Groups</th>
+<th>Upload<br />Date</th>
+<th>Status</th>
+<th>View<br />Evaluation</th>
+[% IF evaluate == 'okay' %]
+<th>Evaluate</th>
+[% END %]
+</tr>
+[% IF Documents.max %]
+[% IF (StartAt + 9 < Documents.max) %]
+[% EndAt = StartAt + 9 %]
+[% ELSE %]
+[% EndAt = Documents.max %]
+[% END %]
+[% this_set = Documents.slice(StartAt,EndAt) %]
+[% ELSE %]
+[% this_set = Documents %]
+[% END %]
+[% rowCounter = 0 %]
+[% FOREACH this_set %]
+[% rowCounter = rowCounter + 1 %]
+<tr [%IF (rowCounter % 2) %]bgcolor="#00ffff"[% END %]>
+  <td><a href="[% scriptdir %]uploadDocument.cgi?DocumentID=[% ID %];action=edit">Edit</a></td>
+  <td>[% AssignmentTitle %]</td>
+  <td>[% DueDate %]</td>
+  <td>[% OwnerName %]</td>
+  <td><a href="[% scriptdir %]annotateit.cgi/[% HTMLURL %]">[% IF Title %][% Title %][% ELSE %]Untitled[% END %]</a> ([% IF State %][% State %][% ELSE %]No State[% END %])</td>
+  <td>[% FOREACH AccessGroups %][% GroupName %]<br />[% END %]</td>
+  <td>[% UploadDate %]</td>
+  <td>[% OutboxStatus %]</td>
+  <td align="center"><a href="[% scriptdir %]viewEvaluation.cgi?DocumentID=[% ID %]">X</a></td>
+  [% IF evaluate == 'okay' %]<td align="center"><a href="[% scriptdir %]evaluateDocument.cgi?DocumentID=[% ID %]">X</td>
+  [% END %]
+</tr>
+[% END %]
+</table>
+[% IF Documents.max %]
+[% IF (StartAt > 0) %]
+<a href="[% scriptdir %]manageDocuments.cgi?DocumentSet=[% DocumentSet %];StartAt=[% StartAt - 10 %];AuthorLastName=[% AuthorLastName %];OutboxStatus=[% OutboxStatus %]">Previous 10</a>
+[% END %]
+[% IF (EndAt < Documents.max) %]
+<a href="[% scriptdir %]manageDocuments.cgi?DocumentSet=[% DocumentSet %];StartAt=[% StartAt + 10 %];AuthorLastName=[% AuthorLastName %];OutboxStatus=[% OutboxStatus %]">Next 10</a>
+[% END %]
+[% END %]
+[% USE Dumper %]
+	<!-- [% Dumper.dump(User) %] -->
+[% INCLUDE Footer %]
+  </body>
+</html>

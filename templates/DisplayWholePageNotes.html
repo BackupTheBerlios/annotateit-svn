@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <head>
+    <title>Whole Page Notes for [% currentURL %]</title>
+  </head>
+
+  <body>
+
+    <h1>Annotations for [% currentURL %]</h1>
+    <h2>Phrasal Notes</h2>
+    [% FOREACH Annotations.Phrase %]
+    ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
+    [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
+    [% AnnotationText %]<br />
+    <hr />
+    
+    [% END %]
+    <h2>Whole Page Notes</h2>
+    
+    [% FOREACH Annotations.WholePage %]
+    ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
+    [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
+      [% AnnotationText %]</a><br />
+    <hr />
+    [% END %]
+
+
+    <hr />
+[% INCLUDE Footer %]
+  </body>
+</html>

@@ -1,0 +1,74 @@
+[% Title = 'Main Menu' %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body [% IF reload %]onLoad="javascript: if (self.opener) self.opener.document.location.reload()"[% END %]>
+    <h1>Main Menu</h1>
+    <ul>
+      [%# IF Status == "Free" %]
+<!--      [%#  <li><a href="http://order.kagi.com/cgi-bin/store.cgi?storeID=18X&lang=en">Purchase License!</a></li>
+        <li><a href="[% scriptdir %]register.cgi">Activate System!</a></li> %] -->
+      [%# END %]
+      [% IF CanViewAssignments %]
+        <li>
+          [%- IF CanHaveAssignments -%]
+            <a href="[% scriptdir %]displayAssignments.cgi">
+          [%- END -%]
+            Display Assignments
+          [%- IF CanHaveAssignments -%]
+            </a>
+          [%- ELSE -%]
+             (You need to join a group first)
+          [%- END -%]</li>
+      [%- END -%]
+      <li><a href="[% scriptdir %]manageGroups.cgi">Manage Groups</a></li>
+      <li><a href="[% scriptdir %]viewAnnotatedURLs.cgi">View Your Annotated URLs</a></li>
+      <li>Edit your <a href="[% scriptdir %]editUserInfo.cgi">own information</a></li>
+      <li>Manage your <a href="[% scriptdir %]manageAnnotations.cgi">predefined annotations</a></li>
+      <li>Get some community <a href="[% scriptdir %]manageCommunityAnnotations.cgi">community annotations</a></li>
+      [% IF Privileges.Own.SearchAnnotations or Privileges.Other.SearchAnnotations %]
+        <li><a href="[% scriptdir %][% searchAnnotationsLink %]">Search</a> for annotations</li>
+      [% END %]
+      [% IF Privileges.Own.ViewStatistics or Privileges.Other.ViewStatistics %]
+        <li><a href="[% scriptdir %]stats.cgi">View Statistics</a></li>
+      [% END %]
+      [% IF Privileges.Own.SearchComments or Privileges.Other.SearchComments %]
+        <li><a href="[% scriptdir %]searchComments.cgi">Search for comments</a></li>
+        <li><a href="[% scriptdir %]searchAnnotations.cgi">Search for Annotations</a></li>
+      [% END %]
+      [% IF Privileges.Own.ManageDocuments or Privileges.Other.ManageDocuments %]
+	<li><a href="[% scriptdir %]manageDocuments.cgi">Manage Documents</a></li>
+      [% END %]
+      [% IF isTeacher || isResearcher || isAdmin %]
+        <li><a href="[% scriptdir %]manageEvalVectors.cgi">Manage Evaluation Vectors</a></li>
+	<li><a href="[% scriptdir %]manageRubrics.cgi">Manage collections of evaluation vectors (Rubrics)</a></li>
+      [% END %]
+      [% IF isAdmin %]
+        <li><a href="[% scriptdir %]UserDetail.cgi">Manage users</a></li>
+      [% END %]
+	<li><a href="[% scriptdir %]login.cgi?action=logout">Logout</a></li>
+    </ul>
+    <p><a href="#" onClick="javascript: self.close()">Close Window</a></p>
+    <hr />
+[% INCLUDE Footer %]
+
+  </body>
+</html>

@@ -1,0 +1,225 @@
+2004-03-07 jnerad
+
+	- (Security Bugfix) Users not in the database are no longer
+	permitted to log on with empty passwords
+
+	- (Minor Feature) Added feedback for failed logons
+
+	- (Minor Feature) annotateit.cgi is now the "proxy" script that
+	performs all the rewriting and display of annotations.  This means
+	that we no longer require non-parsed headers to perform our proxy
+	operations.
+
+	
+2004-02-22 jnerad
+
+	- (Minor Bugfix) Fixed typo preventing addition of user defined
+	custom annotations
+	
+
+2003-09-14 jnerad
+
+	- (Code Cleanup) Simplified the url rewriting in the HTML
+	retrieved to use HTML::TokeParser::Simple.  It is much simpler.
+	
+2003-09-13 jnerad
+
+	- (Minor Bugfix) State maintenance in the assignments calendar was
+	not being maintained.  It is now.
+
+2003-09-11 jnerad
+
+	- (Minor Feature) Added calculation of final score in class
+	according to weights associated with assignments and weights
+	associated with Evaluations.
+	
+	- (Minor Feature) Added weights for assignment in groups.  This
+	allows us to calculate the final grade.
+
+	- (Minor Bugfix) Fixed bad url in a formaction
+
+	- (Minor Bugfix) Rubrics not being displayed when adding an assignment
+	
+2003-09-10 jnerad
+
+	- (Minor Bugfix) Administrators can now view all the documents in
+	the system
+
+2003-09-09 jnerad
+
+	- Released 0.4.6
+	
+2003-09-08 jnerad
+	
+	- (Minor Code Cleanup) Passing the title variable to the
+	editAssignment.cgi
+	
+	- (Minor Bugfix) If there is more than one rubric for an
+	assignment, the system did not display all the evaluation vectors
+	when evaluating a document .  That has been corrected.
+	
+	- (Minor Feature) Added rudimentary adaptive help for Rubrics,
+	Assignments, and Eval Vectors
+	
+	
+2003-09-07 jnerad
+
+	- (Minor Feature) Ability to view evaluation vectors by people
+	associated with an assignment.
+	
+	- (Minor Feature) Added simple email verification: system sends
+	password via email.
+	
+	- (Minor Feature) Added table to viewGroupDetails.cgi that allows
+	viewing of evaluations of every assignment for every member of the
+	group all at once.
+	
+2003-09-06 jnerad
+
+	- (Minor Feature) Modified rubrics and evaluateDocument so that
+	rubrics could be averaging or additive.
+	
+2003-09-04 jnerad
+
+	- Released 0.4.5
+	
+	- (Major Feature) Rubrics complete, can be added to assignments
+	for use evaluating documents.
+	
+2003-09-02 jnerad
+
+	- (Major Feature) Began adding/editing/deleting rubrics for use
+	during evaluation of assigned documents.
+	
+2003-09-01 jnerad
+
+	- (Minor Usability) Added state maintenance to editing
+	assignments.  We carry forward the group of the edited assignment,
+	instead of the selected group (doing so was easier)
+
+2003-08-28 jnerad
+
+	- Released 0.4.4
+	
+	- Evaluation Vectors with weights work from end to end
+	
+2003-08-27 jnerad
+
+	- Added some help when there are no evaluation vectors assigned to
+	a document.
+
+2003-08-13 jnerad
+
+	- Bad URL fixes in some scripts
+
+	- Changed "Manage User Info" to "Main Menu" so that navigation was
+	more meaningful
+
+	- Ability to delete evaluation vectors and all dependencies.
+
+	
+	
+2003-07-28 jnerad
+
+	- Clone assignments
+
+	- Delete assignments permanently instead of hiding them.  Should
+	have no effect on documents uploaded.
+
+	- Minor bugfixes in User.pm
+
+	- Minor bugfixes in Assignments.html template
+
+	- Editing first and last names in UserDetail.cgi
+
+	- Filter assignments by class
+
+	- Minor navigation enhancement in addAssignment.cgi and
+	editAssignment.cgi
+
+	
+2003-07-26 jnerad
+
+	- Added input scrubbing where "appropriate"
+
+	- Moved DNS routines out of widgets, which is called by everyone,
+	and put it into its only caller, nph-proxie.cgi
+
+	- Small template fix for UserDetail.cgi
+
+2003-07-05 jnerad
+
+	- Added Object.pm to the CVS repository (whoops).
+
+	- The evaluation vectors assigned to an assignment can now be
+	modified.  That is, different evaluation vectors can be assigned.
+
+2003-07-04 jnerad
+
+	- Continued work on EvalVector.pm.  Began to use inheritance.
+	What a concept.  Also started with the Class::Accessor and
+	Class::Fields modules.  This will make a huge difference in the
+	readability and maintainability of the code.  I'd like to
+	implement these changes for the .4 series.
+	
+	- Minor bugfixes.
+
+2003-07-03 jnerad
+
+	- Continued work on EvalVector.pm.  The adding portions of it are
+	mostly done.  It works from start to finish for Documents.  Next
+	up is modifying the eval vectors and Assignments.
+
+	- Fixed a bug in sending email for joining groups caused by a
+	missing template file.
+
+2003-06-28 jnerad
+
+	- Changed automatic notice of errors being sent to annotateit-dev
+	to automatic logging of errors via the bugzilla email interface.
+	The errors show up in the system as unconfirmed.  Annotateit-dev
+	gets an email that this has been done.
+
+2003-06-27 jnerad
+
+	- Moved auth::createUser into createUser.cgi for easier
+	maintenance, and hopefully an efficiency boost.
+	2003-06-26 jnerad
+
+	- Added automatic notice of errors sending to annotateit-dev.  If
+	the web server is set up properly, this will let the developers
+	know of any instances of failure on the part of the system.  This
+	includes any 500 error.
+
+	- Removed duplicate installation instructions for the apache
+	configuration file section.	
+
+	- Jack put his house on the market today.
+
+	- Added GNU GPL Headers to the modules files (woops)
+
+2003-06-27 jnerad
+	
+	- Added rudimentary EvalVector.pm, which is the object for making
+	the grading scales that instructors and students will use.  This
+	object still needs a lot of work.
+	
+	- Added tests for Comment.pm, EvalVector.pm.  Made tests for
+	Annotation.pm use a test database
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,70 @@
+[% Title = 'Login' %][% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+    <body>
+      <h1>Please login</h1>
+      [% IF LoginFailed %]
+      <p>Your attempt to login failed.  This could be caused by one of several conditions:
+      <ol>
+        <li>You don't have a username and password already</li>
+        <li>You entered a different email address than the one you received your password from</li>
+        <li>You mistyped your email address</li>
+        <li>You mistyped your password</li>
+        <li>You mistyped both your password and your email address</li>
+        <li>Your browser does not have cookies enabled for this web site</li>
+      </ol>
+      </p>
+      <p>If you have reached this message in error, please email <a href="mailto:support@buzzmaven.com">support@buzzmaven.com</a>.</p>  
+      [% END %]
+      <!-- LoginAttempts: [% LoginAttempts %] -->
+      <!-- LoginFailed: [% LoginFailed %] --> 
+
+      <p>(If you don't have a username and password already, <a href="[% scriptdir %]createUser.cgi?location=login.cgi">create one</a>)</p>
+
+      <form action="[% scriptdir %][% formAction %]" method="post">
+	<input type="hidden" name="authHash" value="" />
+	<input type="hidden" name="randomValue" value="" />
+        <input type="hidden" name="LoginAttempts" value="[% LoginAttempts %]" />
+	[% FOREACH hiddenVar %]
+	<input type="hidden" name="[% name %]" value="[% value %]" />
+	[% END %]
+	<table>
+	    <tr>
+	      <td>Email Address</td>
+	      <td><input type="text" name="emailAddress" size="20" value="[% emailAddress %]"/></td>
+	    </tr>
+	    <tr>
+	      <td>Password</td>
+	      <td><input type="password" name="password" size="20" /></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" value="Login" onClick="login();" /></td>
+	    </tr>
+	</table>
+      </form>
+      <br />
+      <p>Did you forget your password?  We can <a href="[% scriptdir %]sendPassword.cgi">send it to you via email</a>.</p>
+      <hr />
+
+[% INCLUDE Footer %]
+    </body>
+</html>

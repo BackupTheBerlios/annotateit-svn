@@ -1,0 +1,121 @@
+[% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>[% Title %]</h1>
+
+[% IF Screen == "Default" %]
+[% IF User.AdaptiveHelp.Rubric %]
+[% INCLUDE AH_RubricDescription %]
+[% END %]
+     [% IF Rubrics.size %]
+          <table>
+            <tr>
+              <th>Title</th>
+	      <th>Type</th>
+	      <th>Action</th>
+	    </tr>
+            [% FOREACH Rubrics %]
+            <tr>
+             <td>[% Title %]</td>
+	     <td>[% Type %]</td>
+             <td>
+               <a href="[% scriptdir %]manageRubrics.cgi?action=edit;ID=[% ID %]">Edit</a> |
+               <a href="[% scriptdir %]manageRubrics.cgi?action=delete;ID=[% ID %]">Delete</a></td>
+            </tr> 
+            [% END %]
+          </table>
+     [% END %]
+     [% IF User.Privileges.Own.AddRubrics %]
+          <p>You may also <a href="[% scriptdir %]manageRubrics.cgi?action=add">add a rubric</a></p>
+     [% END %]
+[% ELSIF Screen == "Add" || Screen == 'Edit' %]
+     [% IF User.Privileges.Own.AddRubrics %]
+	
+     <form action="[% scriptdir %]manageRubrics.cgi">
+      <input type="hidden" name="action" value="save" />
+      [% IF Screen == "Edit" && Rubric.ID %]
+      <input type="hidden" name="ID" value="[% Rubric.ID %]" />
+      [% END %]
+     <table width="600">
+       <tr>
+	 <td>Rubric Name (so you remember it)</td>
+         <td><input type="text" name="Title" value="[% Rubric.Title %]" /></td>
+       </tr>
+       <tr>
+	 <td>Rubric Type (Additive means that all the final score will be a sum of all the evaluation vector &quot;points&quot;, Average means that the evaluation vectors will be averaged together)</td>
+	 <td><select name="Type">[% FOREACH t = ['Additive','Average'] %]<option value="[% t %]" [% IF t == Type %]selected="selected"[% END %]>[% t %]</option>[% END %]</select></td>
+	</tr>
+       <tr>
+        <td colspan="2">[% UNLESS AvailableEvalVectors.size %]<a href="[% scriptdir %]addEvaluationVector.cgi">Add an evaluation vector first</a>[% ELSE %]
+	  <table>
+            <tr>
+              <td>Description</td>
+	      <td>Active for this Rubric</td>
+	      <td>Weight for this Rubric</td>
+	    <tr>
+	    [% INCLUDE ActiveEvalVectorSelection %][% END %]
+          </table>
+         </td>
+        </tr>
+        <tr>
+	 <td colspan="2" align="center"><input type="submit" name="submit" value="Save Rubric" /></td>
+        </tr>
+      </table>
+	[% IF User.AdaptiveHelp.Rubric %]
+	[% INCLUDE AH_RubricAdding %]
+	[% END %]
+      [% END %]
+[% ELSIF Screen == 'Delete' %]
+<form action="[% scriptdir %]manageRubrics.cgi">
+<input type="hidden" name="ID" value="[% Rubric.ID %]" />
+<input type="hidden" name="action" value="deleteConfirmed" />
+<input type="submit" name="submit" value="Delete This Rubric" />
+</form>
+<p>Note: <strong>This feature is currently inoperative</strong> until dependencies settle down a little bit.</p>
+<table>
+ <tr>
+  <td>Title</td>
+  <td>[% Rubric.Title %]</td>
+ </tr>
+ <tr>
+  <td>Type</td>
+  <td>[% Type %]</td>
+ </tr>
+ <tr>
+  <td>Evaluation Vectors</td>
+  <td>[% FOREACH EvalVectors %][% Title %]<br />[% END %]</td>
+ </tr>
+</table>
+[% ELSIF Screen == "Save" %]
+[% IF User.AdaptiveHelp.Rubric %]
+[% INCLUDE AH_RubricSave %]
+[% END %]
+ <ul>
+	<li><a href="[% scriptdir %]displayAssignments.cgi">Manage Assignments</a></li>
+	<li><a href="[% scriptdir %]manageRubrics.cgi">Manage Rubrics</a>
+	<li><a href="[% scriptdir %]manageUserInfo.cgi">Main Menu</a>
+</li>  
+[% END %]
+[% INCLUDE Footer %]
+  </body>
+</html>

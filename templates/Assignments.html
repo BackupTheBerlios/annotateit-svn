@@ -1,0 +1,110 @@
+[% INCLUDE Header %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+  <body>
+    <h1>[% Title %]</h1>
+    [% IF Success %]
+    <p>Assignment [% Assignment.Title %] has been saved.</p>
+    <p>Would you like to:
+    <ul>
+      <li><a href="[% scriptdir %]addAssignment.cgi">Add another assignment</a>?</li>
+      <li><a href="[% scriptdir %]manageGroups.cgi">View group information</a>?</li>
+      <li><a href="[% scriptdir %]uploadDocument.cgi">Add a document to an assignment</a>?</li>
+	<li><a href="[% scriptdir %]displayAssignments.cgi?[% displayAssignmentsQuery %]">Display Assignments</a></li>
+	<li><a href="[% scriptdir %]manageUserInfo.cgi">Go to the main menu</a></li>
+    </ul>
+    </p>
+      
+      
+    [% ELSE %]
+	[% IF User.AdaptiveHelp.Assignments %]
+	[% INCLUDE AH_AssignmentEditHeader %]
+	[% END %]
+    [% IF Errors %]<p>[%FOREACH Error %][% Value %][% END %]</p>[% END %]
+    <form method="post" action="[% scriptdir %][% formAction %]">
+      <input type="hidden" name="action" value="[% action %]" />
+      <input type="hidden" name="BackPage" value="[% BackPage %]" />
+      [% IF Assignment.ID %]<input type="hidden" name="ID" value="[% Assignment.ID %]" />[% END %]
+      [% IF GroupID %]<input type="hidden" name="GroupID" value="[% GroupID %]" />[% END %]
+      <table>
+	  <tr bgcolor="#00ffff">
+	    <td colspan="2">This assignment is for Group:</td>
+	    <td>[% IF GroupID %][% GroupName %][% ELSE %]<select name="GroupID">[% FOREACH Groups.AllGroups %][% NEXT IF GroupID == "Private" or GroupID == "Public" %]<option value="[% GroupID %]" [% IF GroupID == Assignment.GroupID %]selected="selected"[% END %]>[% GroupName %]</option>[% END %]</select>[% END %]</td>
+	  </tr>
+	  <tr>
+	    <td colspan="2">The title of this assignment is:</td>
+	    <td><input type="text" name="Title" value="[% Assignment.Title %]" /></td>
+	  </tr>
+	  <tr bgcolor="#00ffff">
+	    <td colspan="2">Assignment Due Date (MM/DD/YYYY)</td>
+	    <td><input type="text" name="MonthDue" value="[% Assignment.MonthDue %]" size="3" maxlength="2" /> <input type="text" name="MDayDue" value="[% Assignment.MDayDue %]" size="3" maxlength="2" /> <input type="text" name="YearDue" value="[% Assignment.YearDue %]" size="5" maxlength="4" /></td>
+	  </tr>
+	  <tr>
+	    <td colspan="2">Weight of this<br />grade in final grade</td>
+	    <td><input type="text" name="Weight" value="[% Assignment.Weight %]" size="5" maxlength="3" />[% IF Assignment.Weight%](Currently [% Assignment.WeightOutOf %] or [% Assignment.WeightPercent %])[% END %]</td>
+	  </tr>
+	  <tr>
+	    <td colspan="3"><textarea name="Description" rows="20" cols="60" wrap="virtual">[% IF Assignment.Description %][% Assignment.Description %][% ELSE %]Description of Assignment[% END %]</textarea></td>
+	  </tr>[% IF AvailableEvalVectors.size %]
+	[% IF Rubrics.size %]
+         <tr bgcolor="#00ffff">
+	  <th colspan="2">Rubric</td>
+          <th>Active</td>
+	 </tr>
+         [% FOREACH Rubrics %]
+	  [% IF AssignedRubricHash.exists(ID) %]
+	  [% checked='checked="checked"' %]
+	  [% ELSE %]
+	  [% checked='' %]
+	  [% END %]
+         <tr bgcolor="#00ffff">
+          <td colspan="2">[% Title %] ([% Type %])</td>
+	  <td align="center"><input type="checkbox" name="RubricID" value="[% ID %]" [% checked%] /></td>
+         </tr>
+         [% END %]
+        [% ELSE %]
+	 <tr bgcolor="#00ffff">
+	  <td colspan="3">You don't have any rubrics yet. <a href="[% scriptdir %]manageRubrics.cgi?action=add">Add some?</a>.</td></tr>[% END %]
+
+	  <tr>
+	    <td colspan="3">In addition to the above rubrics, <br />assign the following individual evaluation<br /> vectors to this assignment:</td>
+          </tr>
+	  <tr>
+	   <th>Description</td>
+	   <th>Active</td>
+	   <th>Weight (used in calculation)</td>
+          </tr>
+	[% INCLUDE ActiveEvalVectorSelection %]
+
+          [% ELSE %]<tr><td colspan="3">You don't own any evaluation vectors. <a href="[% scriptdir %]addEvaluationVector.cgi">Add some?</a>.</td></tr>
+	  [% END %]
+         
+      <tr>
+	    <td colspan="3" align="center"><input type="submit" name="action" value="Save Assignment" /></td>
+	  </tr>
+
+      </table>
+    </form>
+    [% END %]
+    [% INCLUDE Footer %]
+  </body>
+</html>

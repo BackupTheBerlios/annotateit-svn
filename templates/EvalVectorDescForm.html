@@ -1,0 +1,75 @@
+[% INCLUDE Header %]
+[%# -*- mode: html -*- %]
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<body>
+<h1>[% Title %]</h1>
+[% IF Screen == "One" %]
+<p>Use this form to create &quot;Evaluation Vectors.&quot;  Evaluation Vectors are composed of a quality (or an entire group of qualities, if you are grading holistically) and a quantity range.  The quantity range can be any whole number, but most people stick to the first hundred integers.</p>
+<dl>
+<dt>Quality</dt>
+<dd>The Quality serves as a summary for this evaluation vector.  In the next screen you will have a chance to assign words to the individual values, if you wish, but the quality should describe what you are basically trying to measure: organization, grammar, logos, ethos, pathos, proper heading, etc.</dd>
+<dt>Minimum Value</dt>
+<dd>The minimum value is the lowest possible score a document could earn for this quality.  If you are evaluating grammar on a scale of 1 to 5, 1 would be the minimum value.  If you are evaluating the whole paper on a scale of 0 to 100, the minimum value would be 0.</dd>
+<dt>Maximum Value</dt>
+<dd>The maximum value is the highest possible score a document could earn for this quality.  If you are evaluating grammar on a scale of 1 to 5, 5 would be the maximum value.  If you are evaluating the whole paper on a scale of 0 to 100, the maximum value would be 100.</dd>
+<dt>Increment</dt>
+<dd>The difference between discrete values in the scale.  Ordinarily, this will be 1.  But if you grade by 10's you might use an increment of 10.  If you are evaluating grammar on a scaleof 1 to 5, your increment will probably be 1.  If you are evaluating the whole paper on a scale of 0 to 100, you might only want to use multiples of 20 (0, 20, 40, 60, 80, 100).  20 would then be your increment.</dd>
+<dt>Type<dt>
+<dd>The type determines how you will enter the number when you are grading/evaluating.  Radio buttons look like this <form><input type="radio" name="foo">1<input type="radio" name="foo">2</form> a Select looks like this <form><select name="foo"><option value="1">1</option><option value="2">2</option></select></form> a Box looks like this <form><input type="text" name="foo" /></form>.  You choose.</dd>
+</dl>
+[% END %]
+
+<form action="[% scriptdir %]addEvaluationVector.cgi">
+[% IF Screen == "One" %]
+<input type="hidden" name="action" value="setValueNames" />
+[% END %]
+<table>
+<tr>
+<td>Quality</td>
+<td><input type="text" name="Title" size="20" maxlength="80" value="[% EV.Title %]" /></td>
+</tr>
+<tr>
+<td>Minimum Value</td>
+<td><input type="text" name="MinimumValue" size="4" value="[% EV.MinimumValue %]" /></td>
+</tr>
+<tr>
+<td>Maximum Value</td>
+<td><input type="text" name="MaximumValue" size="4" value="[% EV.MaximumValue %]" /></td>
+</tr>
+<tr>
+<td>Increment</td>
+<td><input type="text" name="Increment" size="4" value="[% EV.Increment %]" /></td>
+</tr>
+<tr>
+<td>Type</td>
+<td><select name="Type">[% FOREACH v = ['Select','Radio','Box'] %]
+	[% IF v == EV.Type %][% selected = 'selected' %][% END %]
+	<option value="[% v %]" [% selected %]>[% v %]</option>
+	[% END %]
+	</select>
+</tr>
+<tr>
+<td colspan="2" align="center"><input type="submit" name="submit" value="On To Screen 2" /</td>
+</tr>
+[% INCLUDE Footer %]
+

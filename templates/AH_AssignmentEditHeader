@@ -1,0 +1,38 @@
+[%# Copyright 2003, Buzzmaven Co.
+
+# This file is part of Annotateit.
+
+# Annotateit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# Annotateit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Annotateit (see GNU-GPL.txt); if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+# The GNU General Public License may also be found on the Web at:
+#   http://www.gnu.org/licenses/gpl.txt 
+
+%]
+<h2>What is this?</h2>
+
+<p>This is the screen that allows you to
+[% IF Title == 'Clone an Assignment' %]
+clone an assignment that you have already added.  Although you will have to reselect the rubrics and the non-rubric evaluation vectors, all the other information is intact.  A clone of an assignment is an exact copy of the first assignment, but may be due on a different day or for a different class.  At any rate, here you can [% END %]
+ edit an assignment that you
+selected on a previous page.  On it, you will see the group this
+assignment is for, the title of this assignment, The due date,
+(MM-DD-YYYY), the description of the assignment, a list of your
+available rubrics, with any that are associated with the assignment
+checked, and individual evaluation vectors.</p>
+
+<h2>What do I do with it?</h2>
+<p>By editing the assignment using this form, you can change the information that students (and others) will see when they view the assignment's details.  In addition, the rubrics that you select as being associated with this assignment will affect the way you evaluate the assignment.</p>
+<p>The weight of the individual evaluation vectors (the individual evaluation vectors are used in addition to the ones contained by rubrics associated with the assignment) can be set here.  If you leave the weight blank, it will be set to 1.  0 is not an acceptable weight for a selected vector.  A vector with a higher weight is more important in the overall evaluation of the assignment than a vector with a smaller weight.</p>
+<p>Note: You do not need to select evaluation vectors already contained by an associated rubric: they are already associated with the assignment..</p>
+
