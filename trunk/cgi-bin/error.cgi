@@ -26,9 +26,18 @@ use strict;
 use Data::Dumper;
 use lib qw(../site_perl);
 use AnnotateitConfig;
+use auth;
+use User;
+use widgets;
+
 $ENV{PATH} = "/usr/bin:/usr/local/bin";
+
 my $config = $AnnotateitConfig::C;
+our $dbh = &widgets::dbConnect($config);
+
 my $C = CGI->new();
+our $authInfo = &auth::authenticated($dbh,\$C);
+
 
 my $t = Template->new( RELATIVE => 1,
 		    INCLUDE_PATH => "../templates");
@@ -44,10 +53,16 @@ my $vars = { Error => "ScriptError",
 	     ServerAdmin => $ENV{REDIRECT_SERVER_ADMIN},
 	     ENV => Dumper(\%ENV),
 	     ErrorLogTail => $errorLogTail};
+if ($authInfo->{LoggedIn}) {
+    our $user = User->load(dbh => $dbh,
+			   ID => $authInfo->{UserID});
+    $vars->{User} = $user->getDisplayData;
+} 
+
 print $C->header;
 my $messageText = "";
 $t->process("Error.html",$vars) || die $t->error;
-$t->process("ErrorEmailToDev.txt", $vars, \$messageText);
+$t->process("ErrorEmailToDev.txt", $vars, \$messageText) or die $t->error();
 
 
 my $message = MIME::Lite->new( To => 'jack@buzzmaven.com',
@@ -56,5 +71,6 @@ my $message = MIME::Lite->new( To => 'jack@buzzmaven.com',
 			       Type => 'TEXT',
 			       Data => $messageText );
 $message->send;
+
 warn "--- Error trapping occurred ---\n\n";
 exit;
