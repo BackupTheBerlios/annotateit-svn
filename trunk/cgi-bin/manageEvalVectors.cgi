@@ -70,7 +70,7 @@ if ($action eq "") {
 exit;
 
 sub printList {
-  my $vars = { User => $user->getDisplayData, 
+    my $vars = { User => $user->getDisplayData, 
 	      scriptdir => $scriptdir,
 	       Screen => "List",
 	       AvailableEvalVectors => $user->getEvalVectorDisplayData,
