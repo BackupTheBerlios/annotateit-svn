@@ -62,7 +62,7 @@
 	[% ELSIF Error == 'ScriptError' %]
 	<p>You have found a defect in our system.  More than likely, this was caused by negligence on the part of one of our programmers.  Please accept our apologies for any inconvenience this causes you.</p>
 	<p>An email has been dispatched to the <a href="http://www.buzzmaven.com/mailman/listinfo.cgi/annotateit-dev">AnnotateIt! Developers Email list</a> advising them that there is a defect.</p>
-	<p>If you would like to submit a bug report (could take 5-15 minutes depending on whether you have a buzilla account with us), you may submit one at <a href="http://bugzilla.buzzmaven.com">http://bugzilla.buzzmaven.com/cgi-bin/index.cgi</a>.  If you do submit a bug report, please be sure to include this time: [% time %] so that a developer can locate the error in the error logs.  Additional information, such as what you wanted to do when the error happened will be useful.
+	<p>If you would like to submit a bug report (could take 5-15 minutes depending on whether you have a buzilla account with us), you may submit one at <a href="http://developer.berlios.de/projects/annotateit">http://developer.berlios.de/projects/annotateit</a>.  If you do submit a bug report, please be sure to include this time: [% time %] so that a developer can locate the error in the error logs.  Additional information, such as what you wanted to do when the error happened will be useful.
         [% ELSIF Error == 'NoURLSpecified' %]
         <p>Please enter a page to annotate. </p>
         <form action="[% scriptdir %]annotateit.cgi">
