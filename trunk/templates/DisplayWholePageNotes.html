@@ -29,18 +29,32 @@
 
     <h1>Annotations for [% currentURL %]</h1>
     <h2>Whole Page Notes</h2>
-    
     [% FOREACH Annotations.WholePage %]
     ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
+    [% IF User.Privileges.Other.ViewClickthroughs %]
     [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
-      [% AnnotationText %]</a><br />
+    [% END %]
+    <table>
+     <tr>
+     <td width="450">[% AnnotationText %]</td>
+     </tr>
+     </table><br />
     <hr />
     [% END %]
     <h2>Phrasal Notes</h2>
     [% FOREACH Annotations.Phrase %]
     ([% AnnotationGroupName %]) <strong><a href="[% scriptdir %][% DisplayAnnotationURL %]?AnnotationID=[% AnnotationID %]">[% AnnotationTitle %]</a></strong><br />
-    [% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %]
-    [% AnnotationText %]<br />
+    [% IF User.Privileges.Other.ViewClickthroughs %][% IF has_clickthroughs %]Clickthroughs:<br /> [% FOREACH Clickthrough %]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% UserName %]: [% Clickthroughs %]<br />[% END %][% END %][% END %]
+    <table>
+     <tr>
+      <th>Annotation Text</th>
+      <th width="400">Text Annotated</th>
+     </tr>
+     <tr>
+      <td>[% AnnotationText %]</td>
+      <td width="400">[% AnnotationPhrase %]</td>
+     </tr>
+    </table>
     <hr />
     
     [% END %]
