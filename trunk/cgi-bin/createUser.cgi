@@ -27,26 +27,27 @@ use auth;
 use MIME::Lite;
 use Date::Calc qw(Today_and_Now);
 use CGI;
+$ENV{PATH} = "/usr/lib:/usr/bin:/usr/local/bin:/bin";
 our $C = CGI->new;
 
-my $config = Config::Simple->new("../etc/annie.conf");
+our $config = Config::Simple->new("../etc/annie.conf");
 our ($dbh, $scriptdir, $serverURL, $action, $loc, $url);
 $scriptdir = $config->param("server.scriptdirectory");
 $serverURL = $config->param("server.url");
-my $emailFrom = $config->param("email.from");
+our $emailFrom = $config->param("email.from");
 $dbh = &widgets::dbConnect($config);
-$action = $http::C->param("action");
-$loc = $http::C->param("location") || "login.cgi";
-$url = $http::C->param("url") || "";
+$action = $C->param("action");
+$loc = $C->param("location") || "login.cgi";
+$url = $C->param("url") || "";
 
-my $template = Template->new( RELATIVE => 1,
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
 if (defined $action and $action eq "Save My Info") {
-  my $email = &widgets::scrub($http::C->param("email"));
-  my $firstName = &widgets::scrub($http::C->param("FirstName"));
-  my $lastName = &widgets::scrub($http::C->param("LastName"));
-  my $noteType = &widgets::scrub($http::C->param("NoteType"));
-  my $school = &widgets::scrub($http::C->param("School"));
+  my $email = &widgets::scrub($C->param("email"));
+  my $firstName = &widgets::scrub($C->param("FirstName"));
+  my $lastName = &widgets::scrub($C->param("LastName"));
+  my $noteType = &widgets::scrub($C->param("NoteType"));
+  my $school = &widgets::scrub($C->param("School"));
   my $error = &createUser(dbh => $dbh,
 			  email => $email,
 			  firstName => $firstName,
@@ -58,8 +59,8 @@ if (defined $action and $action eq "Save My Info") {
     my $redir = $serverURL . $scriptdir . $loc;
     $redir .= "?url=$url" if ($url);
     my %rd = ( -url => $redir );
-    $rd{-cookie} = &auth::expireAuthTokens if ($loc eq "login.cgi");
-    print $http::C->redirect(%rd);
+    $rd{-cookie} = &auth::expireAuthTokens(\$C) if ($loc eq "login.cgi");
+    print $C->redirect(%rd);
     exit;
   }
   &printUsernameForm(error => $error);
@@ -76,7 +77,7 @@ sub printUsernameForm {
 	       url => $url,
 	       EnglishAction => "Make a New "};
 
-  print $http::C->header();
+  print $C->header();
   $template->process("createUser.html",$vars) or die $template->error();
   exit;
 }
@@ -89,7 +90,6 @@ sub createUser {
   my $lastName = $params{"lastName"};
   my $noteType = $params{"noteType"};
   my $school = $params{"school"};
-  my $scriptdir = &http::scriptdir;
   my $name = "$firstName $lastName";
   my @chars = ('A'..'Z','a'..'z',1..9);
   my $password = "";
@@ -110,7 +110,7 @@ sub createUser {
 sub _checkUser {
 
   my ($dbh) = (@_);
-  my $email = $http::C->param("email");
+  my $email = $C->param("email");
   my $sth = $dbh->prepare("SELECT ID FROM user WHERE email = ?");
   $sth->execute($email);
   my ($id) = $sth->fetchrow_array();
