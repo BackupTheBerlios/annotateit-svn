@@ -22,6 +22,7 @@
 
 %]
   <body>
+
     <h1>[% Title %]</h1>
 	[% IF User.AdaptiveHelp.Assignments %]
 	[% INCLUDE AH_AssignmentDetailsHeader %]
@@ -101,7 +102,7 @@
 	</tr>
 	[% FOREACH EvalVectors %]
 	<tr>
-	  <td><a href="[% scriptdir %]viewEvalVector.cgi?EvalVectorID=[% r.ID %]">[% Title %]</a></td>
+	  <td><a href="[% scriptdir %]viewEvalVector.cgi?EvalVectorID=[% ID %]">[% Title %]</a></td>
 	  <td>[% MinimumValue %] - [% MaximumValue %]</td>
 	  <td>[% Weight %]</td>
 	</tr>

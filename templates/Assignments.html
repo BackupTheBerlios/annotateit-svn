@@ -40,6 +40,7 @@
 	[% INCLUDE AH_AssignmentEditHeader %]
 	[% END %]
     [% IF Errors %]<p>[%FOREACH Error %][% Value %][% END %]</p>[% END %]
+    <p>You can go to the <a href="[% scriptdir %]manageUserInfo.cgi">main menu</a>.<br/>You can also <a href="[% scriptdir %]displayAssignments.cgi">display assignments</a>.</p>
     <form method="post" action="[% scriptdir %][% formAction %]">
       <input type="hidden" name="action" value="[% action %]" />
       <input type="hidden" name="BackPage" value="[% BackPage %]" />

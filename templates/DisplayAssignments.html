@@ -29,7 +29,9 @@
 	[% INCLUDE AH_AssignmentDisplay %]
 	[% END %]
 	[% END %]
-    [% IF AddLink %]You can <a href="[% scriptdir %][% AddURL %]">add an assignment</a>, too.[% END %]
+    
+    [% IF AddLink %]<p>You can <a href="[% scriptdir %][% AddURL %]">add an assignment</a>, too.</p>[% END %]
+<p>You can <a href="[% scriptdir %]manageUserInfo.cgi">go to the main menu</a></p>
 	<p>Show assignments for: 
     <form action="[% scriptdir %]displayAssignments.cgi">
 	<input type="hidden" name="action" value="show_group" />
