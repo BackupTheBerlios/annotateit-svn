@@ -76,9 +76,29 @@ sub printNewForm {
 }
 sub printValueNamesForm {
   my $Title = &widgets::scrub($C->param("Title") || "Untitled");
+  my $vars = {};
+  $vars->{Error} = "";
+  $vars->{EnglishError} = "";
   my $MinValue = &widgets::scrub($C->param("MinimumValue") || 0);
+  if ($MinValue < 0 ) {
+      $vars->{Error} = "AddEvalVectorMinValue";
+      $vars->{EnglishError} = "Minimum value must be 0 or greater";
+  }
   my $MaxValue = &widgets::scrub($C->param("MaximumValue") || 5);
+  if ($MaxValue < 0 ) {
+      $vars->{Error} = "AddEvalVectorMaxValue";
+      $vars->{EnglishError} = "Maximum value must be 0 or greater";
+  }
   my $Increment = &widgets::scrub($C->param("Increment") || 1);
+  if ($Increment < 0 ) {
+      $vars->{Error} = "AddEvalVectorIncrement";
+      $vars->{EnglishError} = "Increment must be 0 or greater";
+  }
+  if ($vars->{Error}) {
+      print $C->header;
+      $template->process("Error.html", $vars) or die $template->error;
+      exit;
+  }
   $Increment ||= 1;
   my $Type = &widgets::scrub($C->param("Type") || "Radio");
   my $user = User->load(dbh => $dbh,
@@ -92,12 +112,12 @@ sub printValueNamesForm {
   $ev->OwnerID($user->getID);
   $ev->save;
   my $dd = $ev->getDisplayData;
-  my $vars = { User => $user->getDisplayData,
-	       scriptdir => $scriptdir,
-	       FormAction => "addEvaluationVector.cgi",
-	       EV => $dd,
-	       Title => "Assign Words to Values",
-	       Screen => "Two" };
+  $vars->{User} = $user->getDisplayData;
+  $vars->{scriptdir} = $scriptdir;
+  $vars->{FormAction} = "addEvaluationVector.cgi";
+  $vars->{EV} = $dd;
+  $vars->{Title} = "Assign Words to Values";
+  $vars->{Screen} = "Two" ;
   print $C->header(-cookie =>$authInfo->{cookie});
   $template->process("AddEvalVector.html",$vars) or die $template->error;
   exit;
