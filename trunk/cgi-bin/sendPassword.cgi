@@ -24,18 +24,18 @@ use MIME::Lite;
 use Template;
 use Config::Simple qw( -strict );
 use lib "../site_perl";
-use http;
 use widgets;
 use User;
 use CGI;
+$ENV{PATH} = "/bin:/usr/bin:/usr/local/bin:/usr/lib";
 our $C = CGI->new;
-my $config = Config::Simple->new("../etc/annie.conf");
-my $template = Template->new( RELATIVE => 1,
+our $config = Config::Simple->new("../etc/annie.conf");
+our $template = Template->new( RELATIVE => 1,
 			      INCLUDE_PATH => "../templates");
-my $serverURL = $config->param("Server.URL");
-my $dbh = &widgets::dbConnect($config);
-my $action = $C->param("action") || "";
-my $scriptdir = $config->param("server.scriptdirectory");
+our $serverURL = $config->param("Server.URL");
+our $dbh = &widgets::dbConnect($config);
+our $action = $C->param("action") || "";
+our $scriptdir = $config->param("server.scriptdirectory");
 if ($action eq "Send My Password") {
   &sendEmail;
 } else {
